@@ -24,7 +24,7 @@ public class LobbyUI : MonoBehaviour
     [SerializeField] private GameObject NameSelectionPanel;
     [SerializeField] private GameObject LobbyListPanel;
     [SerializeField] private GameObject CreateLobbyPanel;
-    [SerializeField] private GameObject JoinedLobbyPanel;
+    [SerializeField] public GameObject JoinedLobbyPanel;
 
 
 
@@ -43,12 +43,15 @@ public class LobbyUI : MonoBehaviour
     [SerializeField] private TMP_Dropdown gameModeDropdown;
     [SerializeField] private Button createButton;
 
-    [Header("Create Lobby Panels")]
+    [Header("Joined Lobby Panels")]
     public TMP_Text currentLobbyName;
     public TMP_Text currentLobbyPlayers;
     public TMP_Text currentLobbyGameMode;
     [SerializeField] private Transform playerListContainer;
     [SerializeField] private Button quitButton;
+    [SerializeField] private GameObject startButtonObj;
+    [SerializeField] private Button startButton;
+
 
 
 
@@ -88,6 +91,17 @@ public class LobbyUI : MonoBehaviour
         PopulateDropDownWithEnum(gameModeDropdown, gameMode);
 
         gameModeDropdown.onValueChanged.AddListener(delegate { DropdownValueChanged(gameModeDropdown); });
+    }
+    public void SetAsHost()
+	{
+        if (lobbyManager.IsLobbyHost())
+        {
+            startButtonObj.SetActive(true);
+            startButton.onClick.AddListener(() =>
+            {
+                lobbyManager.StartGame();
+            });
+        }
     }
 
     public void OnNameChange()

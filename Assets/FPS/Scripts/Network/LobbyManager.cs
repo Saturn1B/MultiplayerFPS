@@ -10,6 +10,7 @@ using Unity.Services.Relay.Models;
 using Unity.Netcode;
 using Unity.Netcode.Transports.UTP;
 using Unity.Networking.Transport.Relay;
+using System.Threading.Tasks;
 
 public class LobbyManager : MonoBehaviour
 {
@@ -38,7 +39,7 @@ public class LobbyManager : MonoBehaviour
         ListLobbies();
     }
 
-    private async void CreateRelay()
+    private async Task<string> CreateRelay()
 	{
         try
         {
@@ -52,10 +53,13 @@ public class LobbyManager : MonoBehaviour
             NetworkManager.Singleton.GetComponent<UnityTransport>().SetRelayServerData(relayServerData);
 
             NetworkManager.Singleton.StartHost();
+
+            return joinCode;
         }
         catch (RelayServiceException e)
         {
             Debug.Log(e);
+            return null;
         }
     }
 
@@ -76,6 +80,37 @@ public class LobbyManager : MonoBehaviour
             Debug.Log(e);
         }
     }
+
+    public async void StartGame()
+	{
+		try
+		{
+            Debug.Log("StartGame");
+
+            string relayCode = await CreateRelay();
+
+            Lobby lobby = await Lobbies.Instance.UpdateLobbyAsync(joinedLobby.Id, new UpdateLobbyOptions
+            {
+                Data = new Dictionary<string, DataObject>
+				{
+                    { "StartGame", new DataObject(DataObject.VisibilityOptions.Member, relayCode) }
+                }
+            });
+
+            joinedLobby = lobby;
+            lobbyUI.JoinedLobbyPanel.SetActive(false);
+		}
+		catch (System.Exception)
+		{
+
+			throw;
+		}
+	}
+
+    public bool IsLobbyHost()
+	{
+        return joinedLobby != null && joinedLobby.HostId == AuthenticationService.Instance.PlayerId;
+	}
 
 	private void Update()
 	{
@@ -111,6 +146,18 @@ public class LobbyManager : MonoBehaviour
                 Lobby lobby = await LobbyService.Instance.GetLobbyAsync(joinedLobby.Id);
                 joinedLobby = lobby;
                 PrintPlayers();
+
+                if(joinedLobby.Data["StartGame"].Value != "0")
+				{
+					if (!IsLobbyHost())
+					{
+                        JoinRelay(joinedLobby.Data["StartGame"].Value);
+					}
+
+                    joinedLobby = null;
+                    lobbyUI.JoinedLobbyPanel.SetActive(false);
+
+                }
             }
         }
     }
@@ -127,6 +174,7 @@ public class LobbyManager : MonoBehaviour
                 Data = new Dictionary<string, DataObject>
 				{
                     { "GameMode", new DataObject(DataObject.VisibilityOptions.Public, gameMode/*, DataObject.IndexOptions.S1*/) },
+                    { "StartGame", new DataObject(DataObject.VisibilityOptions.Member, "0") }
                     //{ "Map", new DataObject(DataObject.VisibilityOptions.Public, "de_dust2")}
 				}
             };
@@ -139,6 +187,7 @@ public class LobbyManager : MonoBehaviour
 			Debug.Log("Created Lobby! " + lobby.Name + " " + lobby.MaxPlayers + " " + lobby.Id + " " + lobby.LobbyCode);
 
             lobbyUI.currentLobbyPlayers.text = lobby.MaxPlayers - lobby.AvailableSlots + "/" + lobby.MaxPlayers;
+            lobbyUI.SetAsHost();
             PrintPlayers(hostLobby);
         }
         catch (LobbyServiceException e)
