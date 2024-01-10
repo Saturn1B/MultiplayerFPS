@@ -381,6 +381,7 @@ Transform:
   m_Children:
   - {fileID: 393611622}
   - {fileID: 741367134}
+  - {fileID: 750953231}
   - {fileID: 807189414}
   m_Father: {fileID: 0}
   m_RootOrder: 2
@@ -430,7 +431,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &741367134
 Transform:
   m_ObjectHideFlags: 0
@@ -531,6 +532,38 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3dfe40bb2040ec54fb57303868e0f144, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  maxRaycastDistance: 100
+--- !u!1 &750953230
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 750953231}
+  m_Layer: 0
+  m_Name: ShotPos
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &750953231
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 750953230}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: -0.013, y: 0.627, z: 0.957}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 612622547}
+  m_RootOrder: -1
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &807189413
 GameObject:
   m_ObjectHideFlags: 0
@@ -543,6 +576,7 @@ GameObject:
   - component: {fileID: 807189417}
   - component: {fileID: 807189416}
   - component: {fileID: 807189415}
+  - component: {fileID: 807189418}
   m_Layer: 0
   m_Name: Shotgun
   m_TagString: Untagged
@@ -638,6 +672,22 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 807189413}
   m_Mesh: {fileID: 10206, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!114 &807189418
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 807189413}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e9053630645a76045b0c9ce850208b61, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  bulletNumber: 25
+  spreadAngle: 7
+  ralspread: 25
+  muzzlePoint: {fileID: 750953231}
 --- !u!1 &929638761
 GameObject:
   m_ObjectHideFlags: 0
