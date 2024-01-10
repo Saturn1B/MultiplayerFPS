@@ -13,6 +13,12 @@ public enum PvPGameMode
     DEATHMATCH
 }
 
+public enum GlobalGameMode
+{
+    PVE,
+    PVP
+}
+
 public class LobbyUI : MonoBehaviour
 {
     [SerializeField] private LobbyManager lobbyManager;
@@ -40,7 +46,9 @@ public class LobbyUI : MonoBehaviour
 
     [Header("Create Lobby Panels")]
     [SerializeField] private TMP_InputField lobbyField;
-    [SerializeField] private TMP_Dropdown gameModeDropdown;
+    [SerializeField] private GameObject pvpGameModeObject;
+    [SerializeField] private TMP_Dropdown pvpGameModeDropdown;
+    [SerializeField] private TMP_Dropdown globalGameModeDropdown;
     [SerializeField] private Button createButton;
 
     [Header("Joined Lobby Panels")]
@@ -58,7 +66,8 @@ public class LobbyUI : MonoBehaviour
     private string playerName;
     private string lobbyName;
     private GameObject currentPanel;
-    private PvPGameMode gameMode;
+    private PvPGameMode pvpGameMode;
+    private GlobalGameMode globalGameMode;
 
 
     private void Awake()
@@ -74,6 +83,18 @@ public class LobbyUI : MonoBehaviour
         createPanelButton.onClick.AddListener(() =>
         {
             SwitchPanel(CreateLobbyPanel);
+
+            PopulateDropDownWithEnum(globalGameModeDropdown, globalGameMode);
+
+            globalGameModeDropdown.onValueChanged.AddListener(delegate { GlobalDropdownValueChanged(globalGameModeDropdown); });
+
+            PopulateDropDownWithEnum(pvpGameModeDropdown, pvpGameMode);
+
+            pvpGameModeDropdown.onValueChanged.AddListener(delegate { PvPDropdownValueChanged(pvpGameModeDropdown); });
+
+            pvpGameModeObject.SetActive(false);
+
+            lobbyField.text = "";
         });
 
         createButton.onClick.AddListener(() =>
@@ -87,10 +108,6 @@ public class LobbyUI : MonoBehaviour
             lobbyManager.LeaveLobby();
             SwitchPanel(LobbyListPanel);
         });
-
-        PopulateDropDownWithEnum(gameModeDropdown, gameMode);
-
-        gameModeDropdown.onValueChanged.AddListener(delegate { DropdownValueChanged(gameModeDropdown); });
     }
     public void SetAsHost()
 	{
@@ -159,7 +176,7 @@ public class LobbyUI : MonoBehaviour
         GameObject l = Instantiate(lobbyDisplayPrefab, lobbyListContainer);
         l.GetComponent<LobbyDisplay>().lobbyManager = lobbyManager;
         l.GetComponent<LobbyDisplay>().lobbyUI = this;
-        l.GetComponent<LobbyDisplay>().SetDisplay(lobby.Name, lobby.MaxPlayers, lobby.MaxPlayers - lobby.AvailableSlots, lobby.Data["GameMode"].Value, lobby);
+        l.GetComponent<LobbyDisplay>().SetDisplay(lobby.Name, lobby.MaxPlayers, lobby.MaxPlayers - lobby.AvailableSlots, lobby.Data["GlobalGameMode"].Value, lobby.Data["PvPGameMode"].Value, lobby);
     }
 
     public void InstanciatePlayerDisplay(Player player)
@@ -170,27 +187,41 @@ public class LobbyUI : MonoBehaviour
 
     public void CreateLobby()
 	{
-        string selectedGameMode = "";
+        string selectedGlobalGameMode = "";
+        string selectedPvPGameMode = "";
 
-		switch (gameMode)
+		switch (globalGameMode)
 		{
-			case PvPGameMode.CONTROL:
-                selectedGameMode = "control";
-				break;
-			case PvPGameMode.MME:
-                selectedGameMode = "mme";
+			case GlobalGameMode.PVE:
+                selectedGlobalGameMode = "pve";
                 break;
-			case PvPGameMode.DEATHMATCH:
-                selectedGameMode = "deathmatch";
+			case GlobalGameMode.PVP:
+                selectedGlobalGameMode = "pvp";
+
+                switch (pvpGameMode)
+                {
+                    case PvPGameMode.CONTROL:
+                        selectedPvPGameMode = "control";
+                        break;
+                    case PvPGameMode.MME:
+                        selectedPvPGameMode = "mme";
+                        break;
+                    case PvPGameMode.DEATHMATCH:
+                        selectedPvPGameMode = "deathmatch";
+                        break;
+                    default:
+                        selectedPvPGameMode = "control";
+                        break;
+                }
+
                 break;
 			default:
-                selectedGameMode = "control";
-                break;
+				break;
 		}
 
-		lobbyManager.CreateLobby(lobbyName, selectedGameMode);
+		lobbyManager.CreateLobby(lobbyName, selectedGlobalGameMode, selectedPvPGameMode);
         currentLobbyName.text = lobbyName;
-        currentLobbyGameMode.text = selectedGameMode;
+        currentLobbyGameMode.text = selectedPvPGameMode == "" ? selectedGlobalGameMode : selectedGlobalGameMode + " | " + selectedPvPGameMode;
 	}
 
     void PopulateDropDownWithEnum(TMP_Dropdown dropdown, Enum targetEnum)//You can populate any dropdown with any enum with this method
@@ -207,8 +238,24 @@ public class LobbyUI : MonoBehaviour
         dropdown.AddOptions(newOptions);//Add new options
     }
 
-    void DropdownValueChanged(TMP_Dropdown change)
+    void PvPDropdownValueChanged(TMP_Dropdown change)
     {
-        gameMode = (PvPGameMode)change.value; //Convert dropwdown value to enum
-    }
+        pvpGameMode = (PvPGameMode)change.value; //Convert dropwdown value to enum
+    }    
+    void GlobalDropdownValueChanged(TMP_Dropdown change)
+    {
+        globalGameMode = (GlobalGameMode)change.value; //Convert dropwdown value to enum
+
+		switch (globalGameMode)
+		{
+			case GlobalGameMode.PVE:
+                pvpGameModeObject.SetActive(false);
+				break;
+			case GlobalGameMode.PVP:
+                pvpGameModeObject.SetActive(true);
+                break;
+			default:
+				break;
+		}
+	}
 }

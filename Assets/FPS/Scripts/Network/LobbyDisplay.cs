@@ -17,11 +17,11 @@ public class LobbyDisplay : MonoBehaviour
 	[HideInInspector] public LobbyManager lobbyManager;
 	[HideInInspector] public LobbyUI lobbyUI;
 
-	public void SetDisplay(string name, int totalPlayer, int connectedPlayer, string gameMode, Lobby lobby)
+	public void SetDisplay(string name, int totalPlayer, int connectedPlayer, string globalGameMode, string pvpGameMode, Lobby lobby)
 	{
 		lobbyName.text = name;
 		lobbyPlayers.text = connectedPlayer + "/" + totalPlayer;
-		lobbyGameMode.text = gameMode;
+		lobbyGameMode.text = pvpGameMode == "" ? globalGameMode : globalGameMode + " | " + pvpGameMode;
 		selectedLobby = lobby;
 
 		joinButton.onClick.AddListener(() =>

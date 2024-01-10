@@ -162,7 +162,7 @@ public class LobbyManager : MonoBehaviour
         }
     }
 
-	public async void CreateLobby(string lobbyName, string gameMode)
+	public async void CreateLobby(string lobbyName, string globalGameMode, string pvpGameMode)
 	{
 		try
 		{
@@ -173,7 +173,8 @@ public class LobbyManager : MonoBehaviour
                 Player = GetPlayer(),
                 Data = new Dictionary<string, DataObject>
 				{
-                    { "GameMode", new DataObject(DataObject.VisibilityOptions.Public, gameMode/*, DataObject.IndexOptions.S1*/) },
+                    { "GlobalGameMode", new DataObject(DataObject.VisibilityOptions.Public, globalGameMode/*, DataObject.IndexOptions.S1*/) },
+                    { "PvPGameMode", new DataObject(DataObject.VisibilityOptions.Public, pvpGameMode/*, DataObject.IndexOptions.S1*/) },
                     { "StartGame", new DataObject(DataObject.VisibilityOptions.Member, "0") }
                     //{ "Map", new DataObject(DataObject.VisibilityOptions.Public, "de_dust2")}
 				}
@@ -220,7 +221,7 @@ public class LobbyManager : MonoBehaviour
             Debug.Log("Lobbies found: " + queryResponse.Results.Count);
 		    foreach (Lobby lobby in queryResponse.Results)
 		    {
-                Debug.Log(lobby.Name + " " + lobby.MaxPlayers + " " + lobby.Data["GameMode"].Value);
+                Debug.Log(lobby.Name + " " + lobby.MaxPlayers + " " + lobby.Data["PvPGameMode"].Value);
                 lobbyUI.InstanciateLobbyDisplay(lobby);
 		    }
 		}
@@ -302,7 +303,7 @@ public class LobbyManager : MonoBehaviour
     private void PrintPlayers(Lobby lobby)
 	{
         lobbyUI.ClearPlayerDisplay();
-        Debug.Log("Players in Lobby " + lobby.Name + " " + lobby.Data["GameMode"].Value/* + " " + lobby.Data["Map"].Value*/);
+        Debug.Log("Players in Lobby " + lobby.Name + " " + lobby.Data["PvPGameMode"].Value/* + " " + lobby.Data["Map"].Value*/);
         lobbyUI.currentLobbyPlayers.text = lobby.MaxPlayers - lobby.AvailableSlots + "/" + lobby.MaxPlayers;
 		foreach (Player player in lobby.Players)
 		{
@@ -319,7 +320,7 @@ public class LobbyManager : MonoBehaviour
             {
                 Data = new Dictionary<string, DataObject>
                 {
-                    { "GameMode", new DataObject(DataObject.VisibilityOptions.Public, gameMode)}
+                    { "PvPGameMode", new DataObject(DataObject.VisibilityOptions.Public, gameMode)}
                 }
             });
             joinedLobby = hostLobby;
