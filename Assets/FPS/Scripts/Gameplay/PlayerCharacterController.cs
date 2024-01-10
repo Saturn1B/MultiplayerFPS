@@ -1,11 +1,12 @@
 ﻿using Unity.FPS.Game;
 using UnityEngine;
 using UnityEngine.Events;
+using Unity.Netcode;
 
 namespace Unity.FPS.Gameplay
 {
     [RequireComponent(typeof(CharacterController), typeof(PlayerInputHandler), typeof(AudioSource))]
-    public class PlayerCharacterController : MonoBehaviour
+    public class PlayerCharacterController : NetworkBehaviour
     {
         [Header("References")] [Tooltip("Reference to the main camera used for the player")]
         public Camera PlayerCamera;
@@ -140,6 +141,12 @@ namespace Unity.FPS.Gameplay
                 actorsManager.SetPlayer(gameObject);
         }
 
+        public override void OnNetworkSpawn()
+        {
+            PlayerCamera.enabled = IsLocalPlayer;
+            AudioSource.enabled = IsLocalPlayer;
+        }
+
         void Start()
         {
             // fetch components on the same gameObject
@@ -172,6 +179,8 @@ namespace Unity.FPS.Gameplay
 
         void Update()
         {
+            if (!IsOwner) return;
+
             // check for Y kill
             if (!IsDead && transform.position.y < KillHeight)
             {
