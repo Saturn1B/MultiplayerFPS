@@ -381,7 +381,6 @@ Transform:
   m_Children:
   - {fileID: 393611622}
   - {fileID: 741367134}
-  - {fileID: 750953231}
   - {fileID: 807189414}
   m_Father: {fileID: 0}
   m_RootOrder: 2
@@ -556,12 +555,12 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 750953230}
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -0.013, y: 0.627, z: 0.957}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalRotation: {x: -0.6981706, y: -0, z: -0, w: 0.7159315}
+  m_LocalPosition: {x: -0.029570788, y: 1.0354363, z: 0.021165071}
+  m_LocalScale: {x: 2.274674, y: 4.102534, z: 3.6338766}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 612622547}
+  m_Father: {fileID: 807189414}
   m_RootOrder: -1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &807189413
@@ -595,7 +594,8 @@ Transform:
   m_LocalPosition: {x: 0, y: 0.625, z: 0.672}
   m_LocalScale: {x: 0.43962345, y: 0.275208, z: 0.24373192}
   m_ConstrainProportionsScale: 0
-  m_Children: []
+  m_Children:
+  - {fileID: 750953231}
   m_Father: {fileID: 612622547}
   m_RootOrder: -1
   m_LocalEulerAnglesHint: {x: 88.561, y: 0, z: 0}
@@ -684,10 +684,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e9053630645a76045b0c9ce850208b61, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  startPoint: {fileID: 750953231}
   bulletNumber: 25
   spreadAngle: 7
   ralspread: 25
-  muzzlePoint: {fileID: 750953231}
 --- !u!1 &929638761
 GameObject:
   m_ObjectHideFlags: 0
