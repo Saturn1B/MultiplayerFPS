@@ -1,9 +1,10 @@
 ﻿using UnityEngine;
 using UnityEngine.Events;
+using Unity.Netcode;
 
 namespace Unity.FPS.Game
 {
-    public class Health : MonoBehaviour
+    public class Health : NetworkBehaviour
     {
         [Tooltip("Maximum amount of health")] public float MaxHealth = 10f;
 

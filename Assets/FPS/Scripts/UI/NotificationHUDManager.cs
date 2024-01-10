@@ -14,12 +14,12 @@ namespace Unity.FPS.UI
 
         void Awake()
         {
-            PlayerWeaponsManager playerWeaponsManager = FindObjectOfType<PlayerWeaponsManager>();
+            PlayerWeaponsManager playerWeaponsManager = GetComponentInParent<PlayerWeaponsManager>();
             DebugUtility.HandleErrorIfNullFindObject<PlayerWeaponsManager, NotificationHUDManager>(playerWeaponsManager,
                 this);
             playerWeaponsManager.OnAddedWeapon += OnPickupWeapon;
 
-            Jetpack jetpack = FindObjectOfType<Jetpack>();
+            Jetpack jetpack = GetComponentInParent<Jetpack>();
             DebugUtility.HandleErrorIfNullFindObject<Jetpack, NotificationHUDManager>(jetpack, this);
             jetpack.OnUnlockJetpack += OnUnlockJetpack;
 

@@ -18,7 +18,7 @@ namespace Unity.FPS.UI
 
         void Start()
         {
-            m_PlayerWeaponsManager = FindObjectOfType<PlayerWeaponsManager>();
+            m_PlayerWeaponsManager = GetComponentInParent<PlayerWeaponsManager>();
             DebugUtility.HandleErrorIfNullFindObject<PlayerWeaponsManager, WeaponHUDManager>(m_PlayerWeaponsManager,
                 this);
 
