@@ -35,7 +35,17 @@ public class WeaponHandler : MonoBehaviour
 
     private void Update()
     {
-        if(currentWeapon.isAutomatic)
+        //Make gun rotate toward where we are looking
+        RaycastHit hit;
+        Debug.DrawRay(cam.transform.position, cam.transform.forward * currentWeapon.shootDistance, Color.red, 1);
+        Vector3 lookAt = cam.transform.position + cam.transform.forward * currentWeapon.shootDistance;
+        if (Physics.Raycast(cam.transform.position, cam.transform.forward, out hit, currentWeapon.shootDistance))
+            lookAt = cam.transform.position + cam.transform.forward * hit.distance;
+        weaponObject.transform.LookAt(lookAt);
+        weaponObject.transform.localEulerAngles = new Vector3(weaponObject.transform.localEulerAngles.x, weaponObject.transform.localEulerAngles.y, 0.0f);
+
+
+        if (currentWeapon.isAutomatic)
 		{
 			if (Input.GetKey(KeyCode.Mouse0))
 			{
@@ -75,6 +85,7 @@ public class WeaponHandler : MonoBehaviour
         weaponRenderer.material = currentWeapon.weaponMat;
     }
 
+    //need to be a server rpc
     private void Shoot()
 	{
         if (!CanShoot()) return;
@@ -82,7 +93,7 @@ public class WeaponHandler : MonoBehaviour
         for (int i = 0; i < currentWeapon.bulletNumber; i++)
         {
             Vector3 direction = Quaternion.Euler(Random.Range(-currentWeapon.dispersion, currentWeapon.dispersion) * Mathf.Cos(Random.Range(0, 2 * Mathf.PI)),
-                Random.Range(-currentWeapon.dispersion, currentWeapon.dispersion) * Mathf.Sin(Random.Range(0, 2 * Mathf.PI)), 0) * cam.transform.forward;
+                Random.Range(-currentWeapon.dispersion, currentWeapon.dispersion) * Mathf.Sin(Random.Range(0, 2 * Mathf.PI)), 0) * weaponObject.transform.forward;
 
             RaycastHit hit;
             if (Physics.Raycast(muzzlePoint.position, direction, out hit, currentWeapon.shootDistance))
