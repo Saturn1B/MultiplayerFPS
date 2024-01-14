@@ -1,8 +1,9 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Unity.Netcode;
 
-public class WeaponHandler : MonoBehaviour
+public class WeaponHandler : NetworkBehaviour
 {
     public WeaponCharacteristic currentWeapon;
 
@@ -24,8 +25,10 @@ public class WeaponHandler : MonoBehaviour
     private bool isWaiting;
     private bool isAiming;
 
-    private void Start()
+    public override void OnNetworkSpawn()
     {
+        if (!IsOwner) return;
+
         cam = GetComponentInChildren<Camera>();
         normalFOV = cam.fieldOfView;
         weaponObject.transform.SetParent(sideSocket);
@@ -35,6 +38,8 @@ public class WeaponHandler : MonoBehaviour
 
     private void Update()
     {
+        if (!IsOwner) return;
+
         //Make gun rotate toward where we are looking
         RaycastHit hit;
         Debug.DrawRay(cam.transform.position, cam.transform.forward * currentWeapon.shootDistance, Color.red, 1);
@@ -47,16 +52,16 @@ public class WeaponHandler : MonoBehaviour
 
         if (currentWeapon.isAutomatic)
 		{
-			if (Input.GetKey(KeyCode.Mouse0))
+			if (Input.GetKey(KeyCode.Mouse0) && CanShoot())
 			{
-                Shoot();
+                ShootServerRpc();
             }
         }
         else
 		{
-			if (Input.GetKeyDown(KeyCode.Mouse0))
+			if (Input.GetKeyDown(KeyCode.Mouse0) && CanShoot())
 			{
-                Shoot();
+                ShootServerRpc();
 			}
 		}
 
@@ -85,10 +90,10 @@ public class WeaponHandler : MonoBehaviour
         weaponRenderer.material = currentWeapon.weaponMat;
     }
 
-    //need to be a server rpc
-    private void Shoot()
+    [ServerRpc]
+    private void ShootServerRpc()
 	{
-        if (!CanShoot()) return;
+        Debug.Log("shoot: " + OwnerClientId);
 
         for (int i = 0; i < currentWeapon.bulletNumber; i++)
         {
@@ -111,10 +116,10 @@ public class WeaponHandler : MonoBehaviour
 
         currentAmmo -= 1;
 
-        if(currentAmmo <= 0)
-		{
+        if (currentAmmo <= 0)
+        {
             hasAmmo = false;
-		}
+        }
 
         StartCoroutine(WaitShootTime());
     }
@@ -145,9 +150,11 @@ public class WeaponHandler : MonoBehaviour
 
     private void Hit(RaycastHit hit)
 	{
+        Debug.Log("hit: " + OwnerClientId);
+
         if (hit.transform.GetComponent<HealthComponent>())
 		{
-            hit.transform.GetComponent<HealthComponent>().TakeDamage(currentWeapon.bulletDamage, currentWeapon.weaponName);
+            hit.transform.GetComponent<HealthComponent>().TakeDamageClientRpc(currentWeapon.bulletDamage, currentWeapon.weaponName);
         }
     }
 

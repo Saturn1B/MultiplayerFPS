@@ -10,17 +10,20 @@ public class HealthComponent : NetworkBehaviour
     public float maxHealth;
     public NetworkVariable<float> currentHealth = new NetworkVariable<float>(0, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner);
 
-
-    private void Start()
-    {
-        currentHealth.Value = maxHealth;
-    }
-
     public override void OnNetworkSpawn()
     {
+        if (!IsOwner) return;
+
+        currentHealth.Value = maxHealth;
+
         currentHealth.OnValueChanged += (float previousValue, float newValue) =>
         {
             Debug.Log(newValue);
+
+            if (newValue <= 0)
+            {
+                HandleDeath();
+            }
         };
     }
 
@@ -29,14 +32,16 @@ public class HealthComponent : NetworkBehaviour
     {
         if (!IsOwner) return;
 
-		if (Input.GetKeyDown(KeyCode.T))
-		{
-            TakeDamage(1, "here");
-		}
+		//if (Input.GetKeyDown(KeyCode.T))
+		//{
+  //          TakeDamage(1, "here");
+		//}
     }
 
-    public void TakeDamage(float amount, string origin)
+    [ClientRpc]
+    public void TakeDamageClientRpc(float amount, string origin)
 	{
+        if (!IsOwner) return;
         if (isInvicible) return;
 
         Debug.Log(origin + " inflicted " + amount + " of damages");
@@ -45,18 +50,12 @@ public class HealthComponent : NetworkBehaviour
 		{
             currentHealth.Value -= amount;
 		}
-
-        if(currentHealth.Value <= 0)
-		{
-            HandleDeath();
-		}
 	}
 
     private void HandleDeath()
 	{
 		if (GetComponent<PlayerController>())
 		{
-            currentHealth.Value = maxHealth;
             transform.position = new Vector3(0, 3, 0);
             StartCoroutine(InvincibilityFrame());
 		}
@@ -65,7 +64,9 @@ public class HealthComponent : NetworkBehaviour
     private IEnumerator InvincibilityFrame()
 	{
         isInvicible = true;
-        yield return new WaitForSeconds(invicibilityTime);
+        yield return new WaitForSeconds(0.5f);
+        currentHealth.Value = maxHealth;
+        yield return new WaitForSeconds(invicibilityTime - 0.5f);
         isInvicible = false;
 	}
 }
