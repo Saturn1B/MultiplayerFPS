@@ -16,9 +16,13 @@ public class ControlArea : MonoBehaviour
     // Définis le temps entre chaque incrément de point
     public float captureInterval = 1f;
 
+    // Temps depuis la dernière incrémentation des points
+    private float timeSinceLastCapture;
+
     void Start()
     {
         isNeutral = true;
+        timeSinceLastCapture = 0f;
         StartCoroutine(UpdatePoints());
     }
 
@@ -53,22 +57,26 @@ public class ControlArea : MonoBehaviour
 
     public void Capture()
     {
-        if (redCap)
+        timeSinceLastCapture += Time.deltaTime;
+
+        if (timeSinceLastCapture >= captureInterval)
         {
-            redPoint += 1; // Ajoute un point par seconde pendant la capture
-        }
-        else if (blueCap)
-        {
-            bluePoint += 1; // Ajoute un point par seconde pendant la capture
-        }
-        else if (isNeutral)
-        {
-            // La zone est neutre, tu peux ajuster le comportement ici si nécessaire.
+            if (redCap && !blueCap)
+            {
+                redPoint += 1; // Ajoute un point par seconde pendant la capture
+            }
+            else if (blueCap && !redCap)
+            {
+                bluePoint += 1; // Ajoute un point par seconde pendant la capture
+            }
+
+            timeSinceLastCapture = 0f; // Réinitialise le temps depuis la dernière incrémentation des points
         }
 
-        // Réinitialise les indicateurs de capture après avoir pris en compte la capture
-        redCap = false;
-        blueCap = false;
+        if (isNeutral)
+        {
+            Debug.Log("Neutre"); // La zone est neutre, tu peux ajuster le comportement ici si nécessaire.
+        }
     }
 
     IEnumerator UpdatePoints()
