@@ -54,14 +54,14 @@ public class WeaponHandler : NetworkBehaviour
 		{
 			if (Input.GetKey(KeyCode.Mouse0) && CanShoot())
 			{
-                ShootServerRpc();
+                Shoot();
             }
         }
         else
 		{
 			if (Input.GetKeyDown(KeyCode.Mouse0) && CanShoot())
 			{
-                ShootServerRpc();
+                Shoot();
 			}
 		}
 
@@ -90,6 +90,20 @@ public class WeaponHandler : NetworkBehaviour
         weaponRenderer.material = currentWeapon.weaponMat;
     }
 
+    private void Shoot()
+	{
+        currentAmmo -= 1;
+
+        if (currentAmmo <= 0)
+        {
+            hasAmmo = false;
+        }
+
+        StartCoroutine(WaitShootTime());
+
+        ShootServerRpc();
+    }
+
     [ServerRpc]
     private void ShootServerRpc()
 	{
@@ -113,15 +127,6 @@ public class WeaponHandler : NetworkBehaviour
 
             Debug.DrawRay(muzzlePoint.position, direction * currentWeapon.shootDistance, Color.red, 3f);
         }
-
-        currentAmmo -= 1;
-
-        if (currentAmmo <= 0)
-        {
-            hasAmmo = false;
-        }
-
-        StartCoroutine(WaitShootTime());
     }
 
     private void Aim()
