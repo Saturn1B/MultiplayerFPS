@@ -10,10 +10,9 @@ public class ControlArea : MonoBehaviour
     int redPoint;
     int bluePoint;
 
-    // Définis le temps entre chaque incrément de point
+    // temps entre chaque incrément de point
     public float captureInterval = 1f;
 
-    // Délai avant que l'équipe commence à gagner des points
     public float captureDelay = 3f;
 
     // Temps depuis le début du délai
@@ -40,12 +39,12 @@ public class ControlArea : MonoBehaviour
         if (other.CompareTag("Red"))
         {
             redCap = true;
-            timeSinceCaptureStart = 0f; // Réinitialise le temps depuis le début du délai
+            timeSinceCaptureStart = 0f;
         }
         else if (other.CompareTag("Blue"))
         {
             blueCap = true;
-            timeSinceCaptureStart = 0f; // Réinitialise le temps depuis le début du délai
+            timeSinceCaptureStart = 0f;
         }
     }
 
@@ -59,7 +58,7 @@ public class ControlArea : MonoBehaviour
         else if (other.CompareTag("Blue"))
         {
             blueCap = false;
-            timeSinceCaptureStart = 0f; // Réinitialise le temps depuis le début du délai si l'équipe quitte la zone
+            timeSinceCaptureStart = 0f;
         }
     }
 
@@ -67,7 +66,6 @@ public class ControlArea : MonoBehaviour
     {
         timeSinceCaptureStart += Time.deltaTime;
 
-        // Ajoute un délai de 3 secondes avant de commencer à gagner des points
         if (timeSinceCaptureStart >= captureDelay)
         {
             timeSinceLastCapture += Time.deltaTime;
@@ -76,11 +74,11 @@ public class ControlArea : MonoBehaviour
             {
                 if (redCap && !blueCap)
                 {
-                    redPoint += 1; // Ajoute un point par seconde pendant la capture
+                    redPoint += 1;
                 }
                 else if (blueCap && !redCap)
                 {
-                    bluePoint += 1; // Ajoute un point par seconde pendant la capture
+                    bluePoint += 1;
                 }
 
                 timeSinceLastCapture = 0f; // Réinitialise le temps depuis la dernière incrémentation des points
@@ -88,7 +86,7 @@ public class ControlArea : MonoBehaviour
 
             if (isNeutral)
             {
-                Debug.Log("Neutre"); // La zone est neutre, tu peux ajuster le comportement ici si nécessaire.
+                Debug.Log("Neutre");
             }
         }
     }
