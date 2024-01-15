@@ -22,7 +22,8 @@ MonoBehaviour:
   isAutomatic: 0
   shootTime: 2
   reloadTime: 5
-  recoilForce: 0
+  recoilForce: 4
+  recoilReturnSpeed: 7
   weaponMesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
   weaponMat: {fileID: 2100000, guid: 80aca137a2109463fb6c86f09a521374, type: 2}
   weaponAnim: {fileID: 0}

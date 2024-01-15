@@ -19,6 +19,8 @@ public class WeaponHandler : NetworkBehaviour
     private Camera cam;
     private float normalFOV;
 
+    private Vector3 recoilVector;
+
     private int currentAmmo;
     private bool hasAmmo;
     private bool isReloading;
@@ -31,6 +33,7 @@ public class WeaponHandler : NetworkBehaviour
 
         cam = GetComponentInChildren<Camera>();
         normalFOV = cam.fieldOfView;
+        recoilVector = Vector3.zero;
         weaponObject.transform.SetParent(sideSocket);
         weaponObject.transform.localPosition = Vector3.zero;
         SetUpNewWeapon();
@@ -40,12 +43,14 @@ public class WeaponHandler : NetworkBehaviour
     {
         if (!IsOwner) return;
 
+        Vector3 forwardRecoil = cam.transform.forward + recoilVector;
+
         //Make gun rotate toward where we are looking
         RaycastHit hit;
-        Debug.DrawRay(cam.transform.position, cam.transform.forward * currentWeapon.shootDistance, Color.red, 1);
-        Vector3 lookAt = cam.transform.position + cam.transform.forward * currentWeapon.shootDistance;
-        if (Physics.Raycast(cam.transform.position, cam.transform.forward, out hit, currentWeapon.shootDistance))
-            lookAt = cam.transform.position + cam.transform.forward * hit.distance;
+        Debug.DrawRay(cam.transform.position, forwardRecoil * currentWeapon.shootDistance, Color.blue, 1);
+        Vector3 lookAt = cam.transform.position + forwardRecoil * currentWeapon.shootDistance;
+        if (Physics.Raycast(cam.transform.position, forwardRecoil, out hit, currentWeapon.shootDistance))
+            lookAt = cam.transform.position + forwardRecoil * hit.distance;
         weaponObject.transform.LookAt(lookAt);
         weaponObject.transform.localEulerAngles = new Vector3(weaponObject.transform.localEulerAngles.x, weaponObject.transform.localEulerAngles.y, 0.0f);
 
@@ -63,6 +68,11 @@ public class WeaponHandler : NetworkBehaviour
 			{
                 Shoot();
 			}
+		}
+
+        if(recoilVector.y > 0)
+		{
+            recoilVector -= new Vector3(0, currentWeapon.recoilReturnSpeed * Time.deltaTime * .1f, 0);
 		}
 
 		if (Input.GetKeyDown(KeyCode.R))
@@ -98,6 +108,8 @@ public class WeaponHandler : NetworkBehaviour
         {
             hasAmmo = false;
         }
+
+        recoilVector += new Vector3(0, currentWeapon.recoilForce, 0) * .1f;
 
         StartCoroutine(WaitShootTime());
 

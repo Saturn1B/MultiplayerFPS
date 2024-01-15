@@ -30,6 +30,7 @@ public class WeaponCharacteristic : ScriptableObject
 
 	[Header("Weapon Visual")]
 	public float recoilForce;
+	public float recoilReturnSpeed;
 	public Mesh weaponMesh;
 	public Material weaponMat;
 	public Animator weaponAnim;
