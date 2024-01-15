@@ -165,7 +165,6 @@ GameObject:
   - component: {fileID: 7548050416484866545}
   - component: {fileID: 2711573035751448328}
   - component: {fileID: 5920062475192343697}
-  - component: {fileID: 1175895769361304446}
   m_Layer: 0
   m_Name: Spot Light (1)
   m_TagString: Untagged
@@ -273,41 +272,6 @@ MonoBehaviour:
   m_LightCookieSize: {x: 1, y: 1}
   m_LightCookieOffset: {x: 0, y: 0}
   m_SoftShadowQuality: 0
---- !u!114 &1175895769361304446
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4761784463381389913}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 57f24a4aaa0761b45ba25e7e5108e2c7, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  UID: 58294392
-  color: {r: 0.8301887, g: 0.6115519, b: 0.38768244, a: 1}
-  intensity: 20
-  shadowSpread: 0.05
-  cutoff: 10
-  realisticFalloff: 1
-  legacySampling: 1
-  samples: 8
-  projMode: 4
-  cookie: {fileID: 2800000, guid: 3a66602b8cc7fdd4ab57d07b4176432b, type: 3}
-  angle: 73.60363
-  innerAngle: 64.23392
-  cubemap: {fileID: 0}
-  iesFile: {fileID: 0}
-  bitmask: 1
-  bakeToIndirect: 0
-  shadowmask: 0
-  shadowmaskFalloff: 0
-  indirectIntensity: 2
-  falloffMinRadius: 0.01
-  shadowmaskGroupID: 0
-  directionMode: 0
-  maskChannel: 0
 --- !u!1 &5733131478340974413
 GameObject:
   m_ObjectHideFlags: 0
@@ -319,7 +283,6 @@ GameObject:
   - component: {fileID: 4741310741190452504}
   - component: {fileID: 7808617698606497653}
   - component: {fileID: 8469638117376329522}
-  - component: {fileID: 8081295500880809372}
   m_Layer: 0
   m_Name: Spot Light
   m_TagString: Untagged
@@ -427,38 +390,3 @@ MonoBehaviour:
   m_LightCookieSize: {x: 1, y: 1}
   m_LightCookieOffset: {x: 0, y: 0}
   m_SoftShadowQuality: 0
---- !u!114 &8081295500880809372
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5733131478340974413}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 57f24a4aaa0761b45ba25e7e5108e2c7, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  UID: 1529917742
-  color: {r: 0.8301887, g: 0.6115519, b: 0.38768244, a: 1}
-  intensity: 25
-  shadowSpread: 0.05
-  cutoff: 10
-  realisticFalloff: 1
-  legacySampling: 1
-  samples: 8
-  projMode: 4
-  cookie: {fileID: 2800000, guid: 3a66602b8cc7fdd4ab57d07b4176432b, type: 3}
-  angle: 109.56315
-  innerAngle: 70.509254
-  cubemap: {fileID: 0}
-  iesFile: {fileID: 0}
-  bitmask: 1
-  bakeToIndirect: 0
-  shadowmask: 0
-  shadowmaskFalloff: 0
-  indirectIntensity: 2
-  falloffMinRadius: 0.01
-  shadowmaskGroupID: 0
-  directionMode: 0
-  maskChannel: 0
