@@ -23,12 +23,13 @@ public class PlayerController : NetworkBehaviour
 
 
     private CharacterController playerController;
+    private WeaponHandler weaponHandler;
     private Camera playerCamera;
 
     private float yaw;
     private float pitch;
 
-    private Vector3 velocity;
+    private Vector3 velocity = Vector3.zero;
     private float gravity = 9.81f;
     private bool isCrouching;
     private float crouchTransitionSpeed = .1f;
@@ -44,6 +45,7 @@ public class PlayerController : NetworkBehaviour
 	private void Start()
     {
         playerController = GetComponent<CharacterController>();
+        weaponHandler = GetComponent<WeaponHandler>();
         playerCamera = GetComponentInChildren<Camera>();
 
         Cursor.lockState = CursorLockMode.Locked;
@@ -56,24 +58,23 @@ public class PlayerController : NetworkBehaviour
 
         HandleMovement();
         HandleMouseLook();
-        HandleJump();
         HandleCrouch();
     }
 
     private void HandleMovement()
     {
-        float currentSpeed = isCrouching ? crouchSpeed : Input.GetKey(KeyCode.LeftShift) ? sprintSpeed : moveSpeed;
+        float currentSpeed = isCrouching || weaponHandler.isAiming ? crouchSpeed : Input.GetKey(KeyCode.LeftShift) ? sprintSpeed : moveSpeed;
 
-        float horizontal = Input.GetAxis("Horizontal");
-        float vertical = Input.GetAxis("Vertical");
+        float horizontal = Input.GetAxis("Horizontal") * currentSpeed;
+        float vertical = Input.GetAxis("Vertical") * currentSpeed;
 
-        Vector3 moveDirection = new Vector3(horizontal, 0.0f, vertical).normalized;
-        Vector3 moveVelocity = transform.TransformDirection(moveDirection) * currentSpeed;
+        Vector3 moveDirection = new Vector3(horizontal, 0.0f, vertical);
+        moveDirection = transform.rotation * moveDirection;
 
-        velocity = Vector3.Lerp(velocity, moveVelocity, Time.deltaTime * 20f);
+        HandleJump();
 
-        // Apply gravity
-        velocity.y -= gravity * Time.deltaTime * 15;
+        velocity.x = moveDirection.x;
+        velocity.z = moveDirection.z;
 
         playerController.Move(velocity * Time.deltaTime);
     }
@@ -92,15 +93,19 @@ public class PlayerController : NetworkBehaviour
 
     private void HandleJump()
     {
-        if (playerController.isGrounded && Input.GetButtonDown("Jump"))
+        if (playerController.isGrounded)
         {
-            if (isCrouching)
-            {
-                StartCoroutine(CrouchStand());
-            }
+            velocity.y = -.5f;
 
-            velocity.y = Mathf.Sqrt(15f * jumpHeight * gravity);
+			if (Input.GetKeyDown(KeyCode.Space))
+			{
+                velocity.y = jumpHeight;
+			}
         }
+		else
+		{
+            velocity.y -= gravity * Time.deltaTime;
+		}
     }
 
     private void HandleCrouch()

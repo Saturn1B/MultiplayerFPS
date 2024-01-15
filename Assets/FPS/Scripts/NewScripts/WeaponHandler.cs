@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using Unity.Netcode;
+using UnityEngine.Events;
 
 public class WeaponHandler : NetworkBehaviour
 {
@@ -21,11 +22,13 @@ public class WeaponHandler : NetworkBehaviour
 
     private Vector3 recoilVector;
 
-    private int currentAmmo;
+    [HideInInspector] public int currentAmmo;
     private bool hasAmmo;
     private bool isReloading;
     private bool isWaiting;
-    private bool isAiming;
+    [HideInInspector] public bool isAiming;
+
+    public UnityEvent ammoUpdate;
 
     public override void OnNetworkSpawn()
     {
@@ -50,25 +53,18 @@ public class WeaponHandler : NetworkBehaviour
         Debug.DrawRay(cam.transform.position, forwardRecoil * currentWeapon.shootDistance, Color.blue, 1);
         Vector3 lookAt = cam.transform.position + forwardRecoil * currentWeapon.shootDistance;
         if (Physics.Raycast(cam.transform.position, forwardRecoil, out hit, currentWeapon.shootDistance))
+		{
             lookAt = cam.transform.position + forwardRecoil * hit.distance;
+            Debug.Log(hit.transform.gameObject.name);
+        }
         weaponObject.transform.LookAt(lookAt);
         weaponObject.transform.localEulerAngles = new Vector3(weaponObject.transform.localEulerAngles.x, weaponObject.transform.localEulerAngles.y, 0.0f);
 
-
-        if (currentWeapon.isAutomatic)
+        bool isShooting = currentWeapon.isAutomatic ? Input.GetKey(KeyCode.Mouse0) : Input.GetKeyDown(KeyCode.Mouse0);
+		if (isShooting && CanShoot())
 		{
-			if (Input.GetKey(KeyCode.Mouse0) && CanShoot())
-			{
-                Shoot();
-            }
+            Shoot();
         }
-        else
-		{
-			if (Input.GetKeyDown(KeyCode.Mouse0) && CanShoot())
-			{
-                Shoot();
-			}
-		}
 
         if(recoilVector.y > 0)
 		{
@@ -93,16 +89,17 @@ public class WeaponHandler : NetworkBehaviour
     private void SetUpNewWeapon()
 	{
         currentAmmo = currentWeapon.maxAmmoInMag;
+        ammoUpdate.Invoke();
         hasAmmo = true;
 
         weaponMesh.mesh = currentWeapon.weaponMesh;
-
         weaponRenderer.material = currentWeapon.weaponMat;
     }
 
     private void Shoot()
 	{
         currentAmmo -= 1;
+        ammoUpdate.Invoke();
 
         if (currentAmmo <= 0)
         {
@@ -183,6 +180,7 @@ public class WeaponHandler : NetworkBehaviour
         if (Input.GetKey(KeyCode.Mouse1) && !isAiming) Aim();
         isReloading = false;
         currentAmmo = currentWeapon.maxAmmoInMag;
+        ammoUpdate.Invoke();
         hasAmmo = true;
 	}
 
