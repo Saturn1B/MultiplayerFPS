@@ -21,6 +21,7 @@ public class WeaponHandler : NetworkBehaviour
     private float normalFOV;
 
     private Vector3 recoilVector;
+    [HideInInspector] public Vector3 lookAt;
 
     [HideInInspector] public int currentAmmo;
     private bool hasAmmo;
@@ -28,7 +29,7 @@ public class WeaponHandler : NetworkBehaviour
     private bool isWaiting;
     [HideInInspector] public bool isAiming;
 
-    public UnityEvent ammoUpdate;
+    [HideInInspector] public UnityEvent ammoUpdate;
 
     public override void OnNetworkSpawn()
     {
@@ -51,12 +52,12 @@ public class WeaponHandler : NetworkBehaviour
         //Make gun rotate toward where we are looking
         RaycastHit hit;
         Debug.DrawRay(cam.transform.position, forwardRecoil * currentWeapon.shootDistance, Color.blue, 1);
-        Vector3 lookAt = cam.transform.position + forwardRecoil * currentWeapon.shootDistance;
+
+        float currentDistance = currentWeapon.shootDistance;
         if (Physics.Raycast(cam.transform.position, forwardRecoil, out hit, currentWeapon.shootDistance))
-		{
-            lookAt = cam.transform.position + forwardRecoil * hit.distance;
-            Debug.Log(hit.transform.gameObject.name);
-        }
+            currentDistance = hit.distance;
+
+        lookAt = cam.transform.position + forwardRecoil * currentDistance;
         weaponObject.transform.LookAt(lookAt);
         weaponObject.transform.localEulerAngles = new Vector3(weaponObject.transform.localEulerAngles.x, weaponObject.transform.localEulerAngles.y, 0.0f);
 
