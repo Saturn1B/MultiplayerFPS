@@ -44,6 +44,9 @@ namespace Unity.FPS.Game
             if (s_AudioManager == null)
                 s_AudioManager = GameObject.FindObjectOfType<AudioManager>();
 
+            if (s_AudioManager == null)
+                return null;
+
             var groups = s_AudioManager.FindMatchingGroups(group.ToString());
 
             if (groups.Length > 0)

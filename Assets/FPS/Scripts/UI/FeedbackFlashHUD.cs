@@ -48,7 +48,7 @@ namespace Unity.FPS.UI
         void Start()
         {
             // Subscribe to player damage events
-            PlayerCharacterController playerCharacterController = FindObjectOfType<PlayerCharacterController>();
+            PlayerCharacterController playerCharacterController = GetComponentInParent<PlayerCharacterController>();
             DebugUtility.HandleErrorIfNullFindObject<PlayerCharacterController, FeedbackFlashHUD>(
                 playerCharacterController, this);
 
@@ -56,8 +56,8 @@ namespace Unity.FPS.UI
             DebugUtility.HandleErrorIfNullGetComponent<Health, FeedbackFlashHUD>(m_PlayerHealth, this,
                 playerCharacterController.gameObject);
 
-            m_GameFlowManager = FindObjectOfType<GameFlowManager>();
-            DebugUtility.HandleErrorIfNullFindObject<GameFlowManager, FeedbackFlashHUD>(m_GameFlowManager, this);
+            //m_GameFlowManager = FindObjectOfType<GameFlowManager>();
+            //DebugUtility.HandleErrorIfNullFindObject<GameFlowManager, FeedbackFlashHUD>(m_GameFlowManager, this);
 
             m_PlayerHealth.OnDamaged += OnTakeDamage;
             m_PlayerHealth.OnHealed += OnHealed;
@@ -72,11 +72,11 @@ namespace Unity.FPS.UI
                     (1 - (m_PlayerHealth.CurrentHealth / m_PlayerHealth.MaxHealth /
                           m_PlayerHealth.CriticalHealthRatio)) * CriticaHealthVignetteMaxAlpha;
 
-                if (m_GameFlowManager.GameIsEnding)
-                    VignetteCanvasGroup.alpha = vignetteAlpha;
-                else
-                    VignetteCanvasGroup.alpha =
-                        ((Mathf.Sin(Time.time * PulsatingVignetteFrequency) / 2) + 0.5f) * vignetteAlpha;
+                //if (m_GameFlowManager.GameIsEnding)
+                //    VignetteCanvasGroup.alpha = vignetteAlpha;
+                //else
+                //    VignetteCanvasGroup.alpha =
+                //        ((Mathf.Sin(Time.time * PulsatingVignetteFrequency) / 2) + 0.5f) * vignetteAlpha;
             }
             else
             {

@@ -16,8 +16,8 @@ namespace Unity.FPS.Game
 
         void Start()
         {
-            m_ActorsManager = GameObject.FindObjectOfType<ActorsManager>();
-            DebugUtility.HandleErrorIfNullFindObject<ActorsManager, Actor>(m_ActorsManager, this);
+            //m_ActorsManager = GameObject.FindObjectOfType<ActorsManager>();
+            //DebugUtility.HandleErrorIfNullFindObject<ActorsManager, Actor>(m_ActorsManager, this);
 
             // Register as an actor
             //if (!m_ActorsManager.Actors.Contains(this))
@@ -29,10 +29,10 @@ namespace Unity.FPS.Game
         void OnDestroy()
         {
             // Unregister as an actor
-            if (m_ActorsManager)
-            {
-                m_ActorsManager.Actors.Remove(this);
-            }
+            //if (m_ActorsManager)
+            //{
+            //    m_ActorsManager.Actors.Remove(this);
+            //}
         }
     }
 }

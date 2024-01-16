@@ -2,11 +2,12 @@
 using Unity.FPS.Game;
 using UnityEngine;
 using UnityEngine.Events;
+using Unity.Netcode;
 
 namespace Unity.FPS.Gameplay
 {
     [RequireComponent(typeof(PlayerInputHandler))]
-    public class PlayerWeaponsManager : MonoBehaviour
+    public class PlayerWeaponsManager : NetworkBehaviour
     {
         public enum WeaponSwitchState
         {
@@ -93,6 +94,11 @@ namespace Unity.FPS.Gameplay
         WeaponSwitchState m_WeaponSwitchState;
         int m_WeaponSwitchNewWeaponIndex;
 
+        public override void OnNetworkSpawn()
+        {
+            WeaponCamera.enabled = IsLocalPlayer;
+        }
+
         void Start()
         {
             ActiveWeaponIndex = -1;
@@ -121,6 +127,8 @@ namespace Unity.FPS.Gameplay
 
         void Update()
         {
+            if (!IsOwner) return;
+
             // shoot handling
             WeaponController activeWeapon = GetActiveWeapon();
 

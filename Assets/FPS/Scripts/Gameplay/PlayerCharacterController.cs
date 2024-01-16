@@ -134,6 +134,8 @@ namespace Unity.FPS.Gameplay
         const float k_JumpGroundingPreventionTime = 0.2f;
         const float k_GroundCheckDistanceInAir = 0.07f;
 
+        public GameObject HUD;
+
         void Awake()
         {
             ActorsManager actorsManager = FindObjectOfType<ActorsManager>();
@@ -145,6 +147,7 @@ namespace Unity.FPS.Gameplay
         {
             PlayerCamera.enabled = IsLocalPlayer;
             AudioSource.enabled = IsLocalPlayer;
+            HUD.SetActive(IsLocalPlayer);
         }
 
         void Start()
@@ -227,12 +230,15 @@ namespace Unity.FPS.Gameplay
 
         void OnDie()
         {
-            IsDead = true;
+            //IsDead = true;
 
             // Tell the weapons manager to switch to a non-existing weapon in order to lower the weapon
-            m_WeaponsManager.SwitchToWeaponIndex(-1, true);
+            //m_WeaponsManager.SwitchToWeaponIndex(-1, true);
 
-            EventManager.Broadcast(Events.PlayerDeathEvent);
+            //EventManager.Broadcast(Events.PlayerDeathEvent);
+
+            m_Controller.Move(-transform.position);
+            m_Health.CurrentHealth = m_Health.MaxHealth;
         }
 
         void GroundCheck()
