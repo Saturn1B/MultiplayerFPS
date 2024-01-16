@@ -15,7 +15,6 @@ public class PlayerTestPitot : MonoBehaviour
 
     void Update()
     {
-        // Gestion des déplacements horizontaux
         float horizontalInput = Input.GetAxis("Horizontal");
         float verticalInput = Input.GetAxis("Vertical");
 
@@ -23,7 +22,6 @@ public class PlayerTestPitot : MonoBehaviour
 
         controller.Move(moveDirection * moveSpeed * Time.deltaTime);
 
-        // Gestion de la gravité et du sol
         isGrounded = controller.isGrounded;
 
         if (isGrounded && playerVelocity.y < 0)
