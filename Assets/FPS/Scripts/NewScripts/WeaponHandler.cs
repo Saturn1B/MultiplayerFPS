@@ -167,6 +167,8 @@ public class WeaponHandler : NetworkBehaviour
 	{
         Debug.Log("hit: " + OwnerClientId);
 
+        if (hit.transform.gameObject.CompareTag(gameObject.tag)) return;
+
         if (hit.transform.GetComponent<HealthComponent>())
 		{
             hit.transform.GetComponent<HealthComponent>().TakeDamageClientRpc(currentWeapon.bulletDamage, currentWeapon.weaponName);
