@@ -531,6 +531,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3dfe40bb2040ec54fb57303868e0f144, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  startPoint: {fileID: 0}
   maxRaycastDistance: 100
 --- !u!1 &750953230
 GameObject:
@@ -685,9 +686,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   startPoint: {fileID: 750953231}
-  bulletNumber: 25
-  spreadAngle: 7
+  bulletNumber: 15
+  spreadAngle: 5
   ralspread: 25
+  maxRaycastDistance: 25
 --- !u!1 &929638761
 GameObject:
   m_ObjectHideFlags: 0
