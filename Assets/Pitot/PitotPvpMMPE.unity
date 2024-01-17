@@ -475,6 +475,8 @@ MonoBehaviour:
   - {fileID: 1607269443}
   - {fileID: 470652339}
   numberOfPlayersPerTeam: 5
+  redScore: 0
+  blueScore: 0
 --- !u!1 &1152647986
 GameObject:
   m_ObjectHideFlags: 0
@@ -869,7 +871,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 31321ba15b8f8eb4c954353edc038b1d, type: 2}
+  - {fileID: 2100000, guid: 73c5606d7c5aa3a4e9efd88e3d36e492, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
