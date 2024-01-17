@@ -51,7 +51,7 @@ public class HealthComponent : NetworkBehaviour
 	{
 		if (GetComponent<PlayerController>())
 		{
-            transform.position = new Vector3(0, 3, 0);
+            GetComponent<PlayerNetworkHandler>().ChooseSpawn();
             StartCoroutine(InvincibilityFrame());
             return;
 		}

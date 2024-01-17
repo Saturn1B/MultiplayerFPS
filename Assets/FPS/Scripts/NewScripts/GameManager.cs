@@ -48,7 +48,7 @@ public class GameManager : NetworkBehaviour
 
         maxPlayers.Value = players;
 
-        ChangeScene("PhobosNetcodeScene");
+        ChangeScene("NewPve");
     }
 
     void ConnectedPlayersCallback(int previous, int current)

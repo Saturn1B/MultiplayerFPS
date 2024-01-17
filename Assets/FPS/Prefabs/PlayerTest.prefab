@@ -1169,7 +1169,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ec04e5132acbc7e43860175b896603a6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  isInvicible: 1
+  isInvicible: 0
   invicibilityTime: 2
   maxHealth: 10
   currentHealth:
@@ -1186,7 +1186,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1727e0f438462894a9112503ee183381, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  currentWeapon: {fileID: 11400000, guid: 597da7b4be5a23941a56c0055d9bae04, type: 2}
+  currentWeapon: {fileID: 11400000, guid: 46ae8f20799dede46b721b7f56bd8fff, type: 2}
   weaponMesh: {fileID: 5720290298583095394}
   weaponRenderer: {fileID: 265084975973983657}
   weaponAnim: {fileID: 0}
