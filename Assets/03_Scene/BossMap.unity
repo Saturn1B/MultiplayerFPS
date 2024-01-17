@@ -20124,7 +20124,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 1062685050423962, guid: 7f38f60a173ec7e4cacc9b7af686d87b, type: 3}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 4432656672967904, guid: 7f38f60a173ec7e4cacc9b7af686d87b, type: 3}
       propertyPath: m_RootOrder
@@ -31464,6 +31464,11 @@ PrefabInstance:
       propertyPath: m_IsActive
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 8690169939496431772, guid: c79498de57cb8ca41ac9a3e91f559084,
+        type: 3}
+      propertyPath: GlobalObjectIdHash
+      value: 2940282858
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -31551,6 +31556,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_IsTrigger
       value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7863886899304236766, guid: aac5ccddb45c9f54197724c32fefec2f,
+        type: 3}
+      propertyPath: GlobalObjectIdHash
+      value: 2913136738
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -31862,6 +31872,11 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 569112124068104606, guid: cd54b580f0bdbe0489eb4f5f197be213,
+        type: 3}
+      propertyPath: GlobalObjectIdHash
+      value: 955833383
+      objectReference: {fileID: 0}
     - target: {fileID: 6069543508240510331, guid: cd54b580f0bdbe0489eb4f5f197be213,
         type: 3}
       propertyPath: m_RootOrder
