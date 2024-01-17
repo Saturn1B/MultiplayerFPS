@@ -20,7 +20,7 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/FPS/Scenes/PhobosTestScene.unity
     guid: f57993e9d5c6bd84a9868365bddb9691
-  - enabled: 0
+  - enabled: 1
     path: Assets/FPS/Scenes/PhobosNetcodeScene.unity
     guid: 7c56c5cda64542b459033ed227c3dcdd
   - enabled: 0
