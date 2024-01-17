@@ -24,6 +24,7 @@ public class PlayerController : NetworkBehaviour
 
     private CharacterController playerController;
     private WeaponHandler weaponHandler;
+    private PlayerNetworkHandler playerNetworkHandler;
     private Camera playerCamera;
 
     private float yaw;
@@ -39,6 +40,7 @@ public class PlayerController : NetworkBehaviour
 	public override void OnNetworkSpawn()
 	{
         if(playerCamera == null) playerCamera = GetComponentInChildren<Camera>();
+        playerCamera.gameObject.GetComponent<AudioListener>().enabled = IsLocalPlayer;
         playerCamera.enabled = IsLocalPlayer;
 	}
 
@@ -46,6 +48,7 @@ public class PlayerController : NetworkBehaviour
     {
         playerController = GetComponent<CharacterController>();
         weaponHandler = GetComponent<WeaponHandler>();
+        playerNetworkHandler = GetComponent<PlayerNetworkHandler>();
         playerCamera = GetComponentInChildren<Camera>();
 
         Cursor.lockState = CursorLockMode.Locked;
@@ -54,7 +57,7 @@ public class PlayerController : NetworkBehaviour
 
     private void Update()
     {
-        if (!IsOwner) return;
+        if (!IsOwner || playerNetworkHandler.gameManager == null || !playerNetworkHandler.gameManager.canPlayerMove.Value ) return;
 
         HandleMovement();
         HandleMouseLook();

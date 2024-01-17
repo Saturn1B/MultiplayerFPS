@@ -3,10 +3,10 @@ using System.Collections.Generic;
 using UnityEngine;
 using Unity.Netcode;
 
-public class AnimController : MonoBehaviour
+public class AnimController : NetworkBehaviour
 {
     private Animator animator; // Référence vers l'Animator
-
+    public GameObject skinnedMeshRenderer;
 
     void Start()
     {
@@ -16,10 +16,26 @@ public class AnimController : MonoBehaviour
 
     void Update()
     {
-        // Vérifie si la touche W est pressée
-        if (Input.GetKeyDown(KeyCode.W))
+        if (!IsOwner) return;
+
+        //skinnedMeshRenderer.SetActive(false);
+        // Vérifie si la touche W est pressée       
+
+        if (Input.GetKeyDown(KeyCode.Z))
         {
             animator.Play("Forward");
+        }
+        if (Input.GetKeyDown(KeyCode.Q))
+        {
+            animator.Play("Left");
+        }
+        if (Input.GetKeyDown(KeyCode.S))
+        {
+            animator.Play("Backward");
+        }
+        if (Input.GetKeyDown(KeyCode.D))
+        {
+            animator.Play("Right");
         }
 
         if (!Input.anyKey)
@@ -31,3 +47,5 @@ public class AnimController : MonoBehaviour
 
     }
 }
+
+
