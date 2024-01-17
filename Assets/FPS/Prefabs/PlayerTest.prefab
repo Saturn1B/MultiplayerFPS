@@ -1169,7 +1169,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ec04e5132acbc7e43860175b896603a6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  isInvicible: 0
+  isInvicible: 1
   invicibilityTime: 2
   maxHealth: 10
   currentHealth:
