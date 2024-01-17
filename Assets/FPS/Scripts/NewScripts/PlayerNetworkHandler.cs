@@ -36,6 +36,7 @@ public class PlayerNetworkHandler : NetworkBehaviour
 				break;
 		}
 
-		gameManager.ConnectPlayerServerRpc();
+		if(IsOwner)
+			gameManager.ConnectPlayerServerRpc();
 	}
 }

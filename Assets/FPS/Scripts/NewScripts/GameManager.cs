@@ -14,6 +14,8 @@ public class GameManager : NetworkBehaviour
 
 	public override void OnNetworkSpawn()
 	{
+        if (!IsHost) return;
+
         connectedPlayers.OnValueChanged += ConnectedPlayersCallback;
 	}
 
@@ -55,7 +57,7 @@ public class GameManager : NetworkBehaviour
 		}
 	}
 
-    [ServerRpc]
+    [ServerRpc(RequireOwnership = false)]
     public void ConnectPlayerServerRpc()
 	{
         connectedPlayers.Value++;
