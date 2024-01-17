@@ -20,8 +20,11 @@ public class BossManager : MonoBehaviour
     
 
     public bool modAttack = false;
+    private bool attack = false;
+
     //public PlayerNetworkHandler[] playerNetworkHandler;
     public GameObject[] players;
+
     private int maTarget;
     public Transform shooter;
     public Transform weapon;
@@ -116,7 +119,10 @@ public class BossManager : MonoBehaviour
             if (/*hit.transform.GetComponent<PlayerNetworkHandler>()*/ hit.transform.CompareTag("Player"))
             {
                 // Le joueur est détecté, arrête le mouvement et vise le joueur
-
+                if (attack == false)
+                {
+                    StartCoroutine(ChargeDamage());
+                }
                 Debug.Log("beeeeeteuuu");
             }
 
@@ -137,5 +143,18 @@ public class BossManager : MonoBehaviour
         Debug.Log("Boss change de target" + maTarget);
 
         StartCoroutine(ChangeTargets());
+    }
+
+
+    public IEnumerator ChargeDamage()
+    {
+        attack = true;
+
+        yield return new WaitForSeconds(Random.Range(1, 4));
+
+
+        Debug.Log("Boss charge damage " + 2);
+
+        attack = false;
     }
 }
