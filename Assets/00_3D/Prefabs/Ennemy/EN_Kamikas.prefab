@@ -13,6 +13,7 @@ GameObject:
   - component: {fileID: 2666795657473001754}
   - component: {fileID: 2048094099308526022}
   - component: {fileID: 2289993820443152632}
+  - component: {fileID: 4045936722942159454}
   m_Layer: 0
   m_Name: EN_Kamikas
   m_TagString: Untagged
@@ -34,7 +35,7 @@ Transform:
   m_Children:
   - {fileID: 4968576366043299510}
   m_Father: {fileID: 0}
-  m_RootOrder: 1
+  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!135 &1599870233357871274
 SphereCollider:
@@ -113,6 +114,23 @@ MonoBehaviour:
   m_IgnoreFromBuild: 1
   m_ApplyToChildren: 1
   m_AffectedAgents: ffffffff
+--- !u!114 &4045936722942159454
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7932275821332992166}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 00c84179e95eb4a46b6a13e7e2e24677, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  explosionForce: 10
+  explosionRadius: 5
+  upwardsModifier: 3
+  health: {fileID: 0}
+  playerHealth: {fileID: 0}
 --- !u!1 &8584279475636755829
 GameObject:
   m_ObjectHideFlags: 0

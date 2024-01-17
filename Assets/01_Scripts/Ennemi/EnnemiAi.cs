@@ -5,6 +5,7 @@ using UnityEngine.AI;
 
 public class EnnemiAi : MonoBehaviour
 {
+    public bool shooter;
 
     public float detectionRadius = 10f;
     public float chaseSpeed = 5f;
@@ -13,17 +14,32 @@ public class EnnemiAi : MonoBehaviour
     private Vector3 initialPosition;
     private NavMeshAgent navMeshAgent;
 
+    public Transform transformShoot;
+
     void Start()
     {
         player = GameObject.FindGameObjectWithTag("Player").transform;
         navMeshAgent = GetComponent<NavMeshAgent>();
         initialPosition = transform.position;
+
+        
+    }
+
+    public void OnTriggerStay(Collider other)
+    {
+        Debug.Log("trigg rien");
+
+        if (other.CompareTag("Player"))
+        {
+            ChasePlayer(); Debug.Log("trigg rien");
+        }
+
     }
 
     private void FixedUpdate()
     {
         // Vérifie si le joueur est dans le rayon de détection
-        if (Vector3.Distance(transform.position, player.position) < detectionRadius)
+        /*if (Vector3.Distance(transform.position, player.position) < detectionRadius)
         {
             ChasePlayer();
         }
@@ -31,7 +47,7 @@ public class EnnemiAi : MonoBehaviour
         {
             ReturnToInitialPosition();
 
-        }
+        }*/
     }
 
     void ChasePlayer()

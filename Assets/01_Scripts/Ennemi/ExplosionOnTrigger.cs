@@ -11,7 +11,6 @@ public class ExplosionOnTrigger : MonoBehaviour
     public float upwardsModifier = 3.0f;
 
     public Health health;
-
     public Health playerHealth;
 
     void OnTriggerEnter(Collider other)
