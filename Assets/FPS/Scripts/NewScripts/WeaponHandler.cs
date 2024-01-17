@@ -173,6 +173,10 @@ public class WeaponHandler : NetworkBehaviour
 		{
             hit.transform.GetComponent<HealthComponent>().TakeDamageClientRpc(currentWeapon.bulletDamage, currentWeapon.weaponName);
         }
+        else if (hit.transform.GetComponentInParent<HealthComponent>())
+		{
+            hit.transform.GetComponentInParent<HealthComponent>().TakeDamageClientRpc(currentWeapon.bulletDamage, currentWeapon.weaponName);
+        }
     }
 
     private IEnumerator Reload()

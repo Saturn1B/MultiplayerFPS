@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using Unity.Netcode;
+using System.Linq;
 
 public enum RoomType
 {
@@ -26,16 +27,27 @@ public class Room : NetworkBehaviour
 
 		foreach(GameObject enemy in roomEnemys)
 		{
-			enemy.GetComponent<HealthComponent>().OnDeath += OnEnemyDeathServerRpc;
+			enemy.GetComponentInChildren<HealthComponent>().OnDeath += OnEnemyDeathServerRpc;
 		}
 	}
 
-	[ServerRpc]
+	[ServerRpc(RequireOwnership = false)]
 	private void OnEnemyDeathServerRpc()
 	{
-		Debug.Log("Enemy died");
-		roomEnemys.RemoveAll(s => s == null);
-		if(roomEnemys.Count <= 0)
+		StartCoroutine(OnEnemyDeathHandler());
+	}
+
+	private IEnumerator OnEnemyDeathHandler()
+	{
+		bool isNull = false;
+		while (!isNull)
+		{
+			if(roomEnemys.Any(element => element == null))
+				isNull = true;
+			yield return null;
+		}
+		roomEnemys.RemoveAll(GameObject => GameObject == null);
+		if (roomEnemys.Count <= 0)
 		{
 			switch (roomType)
 			{
@@ -67,13 +79,10 @@ public class Room : NetworkBehaviour
 
 	private void OnTriggerEnter(Collider other)
 	{
-		Debug.Log("Trigger");
 		if (!IsHost) return;
-		Debug.Log("Trigger2");
 
 		if (other.transform.GetComponent<PlayerNetworkHandler>() && roomType == RoomType.STARTING && !isDoorOpened)
 		{
-			Debug.Log("Trigger3");
 			playerOnRoom++;
 			if(playerOnRoom >= gameManager.maxPlayers.Value)
 			{

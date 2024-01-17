@@ -57,10 +57,13 @@ public class PlayerController : NetworkBehaviour
 
     private void Update()
     {
-        if (!IsOwner || playerNetworkHandler.gameManager == null || !playerNetworkHandler.gameManager.canPlayerMove.Value ) return;
+        if (!IsOwner && !playerController.enabled) return;
+
+        HandleMouseLook();
+
+        if (playerNetworkHandler.gameManager == null || !playerNetworkHandler.gameManager.canPlayerMove.Value) return;
 
         HandleMovement();
-        HandleMouseLook();
         HandleCrouch();
     }
 
@@ -145,5 +148,12 @@ public class PlayerController : NetworkBehaviour
             angle -= 360;
 
         return Mathf.Clamp(angle, min, max);
+    }
+
+    public void Teleport(Vector3 newPos)
+	{
+        playerController.enabled = false;
+        transform.position = newPos;
+        playerController.enabled = true;
     }
 }

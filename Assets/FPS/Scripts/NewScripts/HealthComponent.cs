@@ -52,7 +52,8 @@ public class HealthComponent : NetworkBehaviour
             StartCoroutine(InvincibilityFrame());
             return;
 		}
-        Destroy(gameObject);
+        gameObject.GetComponent<NetworkObject>().Despawn();
+        //Destroy(gameObject);
     }
 
     private IEnumerator InvincibilityFrame()
@@ -64,9 +65,15 @@ public class HealthComponent : NetworkBehaviour
         isInvicible = false;
 	}
 
-	private void OnDestroy()
+	//private void OnDestroy()
+	//{
+ //       if(OnDeath != null)
+ //           OnDeath.Invoke();
+ //   }
+
+	public override void OnNetworkDespawn()
 	{
-        if(OnDeath != null)
+        if (OnDeath != null)
             OnDeath.Invoke();
     }
 }

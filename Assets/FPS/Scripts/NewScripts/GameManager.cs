@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using Unity.Netcode;
 using UnityEngine.SceneManagement;
+using UnityEngine.Events;
 
 public class GameManager : NetworkBehaviour
 {
@@ -12,8 +13,12 @@ public class GameManager : NetworkBehaviour
     public NetworkVariable<int> connectedPlayers = new NetworkVariable<int>(0, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Server);
     public NetworkVariable<bool> canPlayerMove = new NetworkVariable<bool>(false, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Server);
 
+    public UnityEvent changeScene;
+
 	public override void OnNetworkSpawn()
 	{
+        if (!IsHost) return;
+
         connectedPlayers.OnValueChanged += ConnectedPlayersCallback;
 	}
 
@@ -43,8 +48,7 @@ public class GameManager : NetworkBehaviour
 
         maxPlayers.Value = players;
 
-        //TO DO handle different scene rerout for all the different game mode
-        NetworkManager.SceneManager.LoadScene("PhobosNetcodeScene", LoadSceneMode.Single);
+        ChangeScene("PhobosNetcodeScene");
     }
 
     void ConnectedPlayersCallback(int previous, int current)
@@ -55,11 +59,17 @@ public class GameManager : NetworkBehaviour
 		}
 	}
 
-    [ServerRpc]
+    [ServerRpc(RequireOwnership = false)]
     public void ConnectPlayerServerRpc()
 	{
         connectedPlayers.Value++;
 	}
+
+    public void ChangeScene(string sceneName)
+	{
+        //TO DO handle different scene rerout for all the different game mode
+        NetworkManager.SceneManager.LoadScene(sceneName, LoadSceneMode.Single);
+    }
 }
 
 
