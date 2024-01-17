@@ -22,6 +22,9 @@ public class LobbyManager : MonoBehaviour
     private float lobbyUpdateTimer;
     private string playerName;
 
+    public GameObject gameManagerPrefab;
+    private GameObject gameManagerInstance;
+
     public async void Authenticate(string name)
     {
         await UnityServices.InitializeAsync();
@@ -99,6 +102,16 @@ public class LobbyManager : MonoBehaviour
 
             joinedLobby = lobby;
             lobbyUI.JoinedLobbyPanel.SetActive(false);
+
+			if (IsLobbyHost())
+			{
+                gameManagerInstance = Instantiate(gameManagerPrefab);
+                NetworkObject networkObject = gameManagerInstance.GetComponent<NetworkObject>();
+                networkObject.Spawn();
+                gameManagerInstance.GetComponent<GameManager>().SetUpGameManagerServerRpc(
+                    joinedLobby.Data["GlobalGameMode"].Value == "pve" ? joinedLobby.Data["GlobalGameMode"].Value : joinedLobby.Data["PvPGameMode"].Value,
+                    joinedLobby.MaxPlayers - joinedLobby.AvailableSlots);
+			}
 		}
 		catch (System.Exception)
 		{
@@ -356,6 +369,11 @@ public class LobbyManager : MonoBehaviour
 	{
         try
         {
+            if(joinedLobby.MaxPlayers - joinedLobby.AvailableSlots <= 1)
+			{
+                DeleteLobby();
+                Debug.Log("DeletLobby");
+			}
             await LobbyService.Instance.RemovePlayerAsync(joinedLobby.Id, AuthenticationService.Instance.PlayerId);
             joinedLobby = null;
             hostLobby = null;

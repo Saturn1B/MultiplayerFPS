@@ -1283,7 +1283,7 @@ MonoBehaviour:
   NetworkConfig:
     ProtocolVersion: 0
     NetworkTransport: {fileID: 455157434}
-    PlayerPrefab: {fileID: 4503929120636026372, guid: 761cdc9e4e883334cbdcea062d0befa7,
+    PlayerPrefab: {fileID: 5088145151563272502, guid: 8061b56347891234b8156b858bdd9c00,
       type: 3}
     Prefabs:
       NetworkPrefabsLists:
@@ -6034,6 +6034,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   lobbyUI: {fileID: 1503110807}
+  gameManagerPrefab: {fileID: 2805463072884934407, guid: 1804344d2ca454a4fad5de00ee052019,
+    type: 3}
 --- !u!4 &1503110806
 Transform:
   m_ObjectHideFlags: 0
@@ -8526,7 +8528,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 1}
   m_AnchorMax: {x: 0.5, y: 1}
-  m_AnchoredPosition: {x: 0, y: -100}
+  m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 600, y: 75}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &2057966364
@@ -8714,7 +8716,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0}
   m_AnchorMax: {x: 0.5, y: 0}
-  m_AnchoredPosition: {x: 0, y: 200}
+  m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 600, y: 75}
   m_Pivot: {x: 0.5, y: 0}
 --- !u!114 &2062382742
