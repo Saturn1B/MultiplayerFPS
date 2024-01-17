@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
+using static UnityEngine.GraphicsBuffer;
 
 public class EnnemiAi : MonoBehaviour
 {
@@ -12,19 +13,22 @@ public class EnnemiAi : MonoBehaviour
     public float chaseSpeed = 5f;
     public float returnSpeed = 3f;
 
+    [SerializeField]
+    private Transform targets;
 
-    private Transform player;
     private Vector3 initialPosition;
     private NavMeshAgent navMeshAgent;
 
     [SerializeField]
     private bool targetFound = false;
+    [SerializeField]
+    private bool shoot = false;
 
     public Transform transformShoot;
 
     void Start()
     {
-        player = GameObject.FindGameObjectWithTag("Player").transform;
+        
         navMeshAgent = GetComponent<NavMeshAgent>();
         initialPosition = transform.position;
 
@@ -37,6 +41,8 @@ public class EnnemiAi : MonoBehaviour
 
         if (other.transform.GetComponent<PlayerNetworkHandler>())
         {
+            targets = other.transform;
+
             if (shooter && other.transform.GetComponent<PlayerNetworkHandler>())
             {
                 // Obtient la position actuelle de l'objet
@@ -55,6 +61,7 @@ public class EnnemiAi : MonoBehaviour
                     if (hit.transform.GetComponent<PlayerNetworkHandler>())
                     {
                         // Le joueur est détecté, arrête le mouvement et vise le joueur
+
                         targetFound = true;
                         StopMovementAndAim();
                     }
@@ -86,7 +93,7 @@ public class EnnemiAi : MonoBehaviour
 
     void ChasePlayer()
     {
-        navMeshAgent.destination = player.position;
+        navMeshAgent.destination = targets.position;
     }
 
     void ShootPos()
@@ -100,32 +107,40 @@ public class EnnemiAi : MonoBehaviour
         {
             // Sinon, continue à suivre le joueur
             navMeshAgent.isStopped = false;
-            navMeshAgent.destination = player.position;
+            navMeshAgent.destination = targets.position;
         }
     }
 
     private void StopMovementAndAim()
-    {
+    {    
         // Arrête le mouvement du NavMeshAgent
         navMeshAgent.isStopped = true;
 
-        // Ajoute le code pour viser le joueur ici (par exemple, faire pivoter l'ennemi vers le joueur)
-        // ...
+        if (shoot == false)
+        {
+            shoot = true;
 
-        // Ajoutez ici le code pour effectuer l'action de tir ou autre action liée à l'arrêt
-        // ...
+            StartCoroutine(ShootRoutine());
+        }
+        
     }
 
-    void ReturnToInitialPosition()
+    IEnumerator ShootRoutine()
     {
-        navMeshAgent.destination = initialPosition;
-    }
+        yield return new WaitForSeconds(1f);
 
-    /*void OnDrawGizmos()
-    {
-        // Dessine une sphère de détection dans l'éditeur Unity pour visualiser la portée
-        Gizmos.color = Color.yellow;
-        Gizmos.DrawWireSphere(transform.position, detectionRadius);
-    }*/
+        if (targetFound)
+        {
+            Debug.Log("pew pew");
+
+            targets.GetComponent<HealthComponent>().TakeDamageClientRpc(1f, gameObject.name);
+        }
+        else
+        {
+            Debug.Log("plus d'enemy");
+        }
+
+        shoot = false;
+    }
 
 }
