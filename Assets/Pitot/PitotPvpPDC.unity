@@ -378,7 +378,7 @@ GameObject:
   - component: {fileID: 1502769024}
   - component: {fileID: 1502769027}
   - component: {fileID: 1502769028}
-  m_Layer: 0
+  m_Layer: 2
   m_Name: CapArea
   m_TagString: Blue
   m_Icon: {fileID: 0}

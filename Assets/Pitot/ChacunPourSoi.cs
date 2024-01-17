@@ -5,10 +5,16 @@ using System.Collections.Generic;
 public class ChacunPourSoi : MonoBehaviour
 {
     public GameObject playerPrefab;
+    public GameObject healBonusPrefab;
     public Transform[] spawnPoints;
+
+    public float healBonusChance = 0.5f;
+    public int maxPlayers = 10;
+    public int killsToWin = 5;
 
     private List<Transform> availableSpawnPoints = new List<Transform>();
     private List<GameObject> players = new List<GameObject>();
+    private Dictionary<GameObject, int> playerKills = new Dictionary<GameObject, int>();
 
     void Start()
     {
@@ -23,6 +29,7 @@ public class ChacunPourSoi : MonoBehaviour
         {
             EliminateRandomPlayer();
         }
+        CheckWinCondition();
     }
 
     void InitializeSpawnPoints()
@@ -32,19 +39,16 @@ public class ChacunPourSoi : MonoBehaviour
 
     void InstantiatePlayers()
     {
-        for (int i = 0; i < 10; i++)
-        {
-            if (availableSpawnPoints.Count == 0)
-            {
-                Debug.LogWarning("Not enough spawn points for all players!");
-                break;
-            }
+        int numPlayers = Mathf.Min(maxPlayers, availableSpawnPoints.Count);
 
+        for (int i = 0; i < numPlayers; i++)
+        {
             int randomIndex = Random.Range(0, availableSpawnPoints.Count);
             Transform spawnPoint = availableSpawnPoints[randomIndex];
 
             GameObject player = Instantiate(playerPrefab, spawnPoint.position, Quaternion.identity);
             players.Add(player);
+            playerKills.Add(player, 0); // Initialiser le nombre de kills à 0
 
             availableSpawnPoints.RemoveAt(randomIndex);
         }
@@ -58,8 +62,17 @@ public class ChacunPourSoi : MonoBehaviour
             GameObject playerToEliminate = players[randomIndex];
             players.RemoveAt(randomIndex);
 
-            // Ajoutez ici la logique pour l'élimination du joueur (désactivez plutôt que de détruire)
+            // élimination du joueur (désactivez plutôt que de détruire)
             playerToEliminate.SetActive(false);
+
+            // Ajoutez la logique pour le bonus de heal avec une chance définie
+            if (Random.value <= healBonusChance)
+            {
+                Instantiate(healBonusPrefab, playerToEliminate.transform.position, Quaternion.identity);
+            }
+
+            // Augmentez le nombre de kills du joueur éliminé
+            playerKills[playerToEliminate]++;
 
             // Lance la coroutine pour réapparition après 5 secondes
             StartCoroutine(RespawnPlayerAfterDelay(playerToEliminate));
@@ -70,34 +83,32 @@ public class ChacunPourSoi : MonoBehaviour
     {
         yield return new WaitForSeconds(5f);
 
-        // Vérifie si le GameObject existe toujours
-        if (playerToRespawn != null)
-        {
-            // Trouve un point de spawn disponible
             if (availableSpawnPoints.Count > 0)
             {
                 int randomIndex = Random.Range(0, availableSpawnPoints.Count);
                 Transform respawnPoint = availableSpawnPoints[randomIndex];
 
-                // Réapparition du joueur sur le point de spawn
                 playerToRespawn.transform.position = respawnPoint.position;
-
-                // Ajoutez ici d'autres actions si nécessaire
 
                 availableSpawnPoints.RemoveAt(randomIndex);
                 players.Add(playerToRespawn);
 
-                // Réactive le joueur
                 playerToRespawn.SetActive(true);
             }
             else
             {
                 Debug.LogWarning("No available spawn points for respawn.");
             }
-        }
-        else
+    }
+
+    void CheckWinCondition()
+    {
+        foreach (var player in playerKills.Keys)
         {
-            Debug.LogWarning("Player to respawn is null.");
+            if (playerKills[player] >= killsToWin)
+            {
+                Debug.Log(player.name + " wins!");
+            }
         }
     }
 }
