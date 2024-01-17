@@ -149,9 +149,9 @@ GameObject:
   - component: {fileID: 8919677655230704894}
   - component: {fileID: 4635661011397255470}
   - component: {fileID: 6136377967829606303}
-  - component: {fileID: 8039587712261813404}
   - component: {fileID: 7863886899304236766}
   - component: {fileID: 7117847457651372111}
+  - component: {fileID: 4525065698342409709}
   m_Layer: 0
   m_Name: EN_Normal
   m_TagString: Untagged
@@ -192,7 +192,9 @@ MonoBehaviour:
   raycastDistance: 10
   chaseSpeed: 5
   returnSpeed: 3
+  targets: {fileID: 0}
   targetFound: 0
+  shoot: 0
   transformShoot: {fileID: 8170484241384867666}
 --- !u!195 &4635661011397255470
 NavMeshAgent:
@@ -237,23 +239,6 @@ SphereCollider:
   serializedVersion: 3
   m_Radius: 15
   m_Center: {x: 0, y: 0, z: 0}
---- !u!114 &8039587712261813404
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4824177175204389605}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ec04e5132acbc7e43860175b896603a6, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  isInvicible: 0
-  invicibilityTime: 0
-  maxHealth: 0
-  currentHealth:
-    m_InternalValue: 0
 --- !u!114 &7863886899304236766
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -304,3 +289,20 @@ MonoBehaviour:
   InLocalSpace: 0
   Interpolate: 1
   SlerpPosition: 0
+--- !u!114 &4525065698342409709
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4824177175204389605}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ec04e5132acbc7e43860175b896603a6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  isInvicible: 0
+  invicibilityTime: 0
+  maxHealth: 20
+  currentHealth:
+    m_InternalValue: 0

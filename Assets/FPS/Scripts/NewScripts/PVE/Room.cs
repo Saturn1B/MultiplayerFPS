@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using Unity.Netcode;
+using System.Linq;
 
 public enum RoomType
 {
@@ -26,16 +27,27 @@ public class Room : NetworkBehaviour
 
 		foreach(GameObject enemy in roomEnemys)
 		{
-			enemy.GetComponent<HealthComponent>().OnDeath += OnEnemyDeathServerRpc;
+			enemy.GetComponentInChildren<HealthComponent>().OnDeath += OnEnemyDeathServerRpc;
 		}
 	}
 
 	[ServerRpc]
 	private void OnEnemyDeathServerRpc()
 	{
-		Debug.Log("Enemy died");
-		roomEnemys.RemoveAll(s => s == null);
-		if(roomEnemys.Count <= 0)
+		StartCoroutine(OnEnemyDeathHandler());
+	}
+
+	private IEnumerator OnEnemyDeathHandler()
+	{
+		bool isNull = false;
+		while (!isNull)
+		{
+			if(roomEnemys.Any(element => element == null))
+				isNull = true;
+			yield return null;
+		}
+		roomEnemys.RemoveAll(GameObject => GameObject == null);
+		if (roomEnemys.Count <= 0)
 		{
 			switch (roomType)
 			{
