@@ -31,7 +31,7 @@ public class Room : NetworkBehaviour
 		}
 	}
 
-	[ServerRpc]
+	[ServerRpc(RequireOwnership = false)]
 	private void OnEnemyDeathServerRpc()
 	{
 		StartCoroutine(OnEnemyDeathHandler());
@@ -79,13 +79,10 @@ public class Room : NetworkBehaviour
 
 	private void OnTriggerEnter(Collider other)
 	{
-		Debug.Log("Trigger");
 		if (!IsHost) return;
-		Debug.Log("Trigger2");
 
 		if (other.transform.GetComponent<PlayerNetworkHandler>() && roomType == RoomType.STARTING && !isDoorOpened)
 		{
-			Debug.Log("Trigger3");
 			playerOnRoom++;
 			if(playerOnRoom >= gameManager.maxPlayers.Value)
 			{
