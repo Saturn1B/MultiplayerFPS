@@ -33,8 +33,11 @@ public class HealthComponent : NetworkBehaviour
     [ClientRpc]
     public void TakeDamageClientRpc(float amount, string origin)
 	{
-        if (!IsOwner) return;
         if (isInvicible) return;
+        Debug.Log("damage isn't ownwer");
+        if (!IsOwner) return;
+        Debug.Log("damage is ownwer");
+
 
         Debug.Log(origin + " inflicted " + amount + " of damages");
 

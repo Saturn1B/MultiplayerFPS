@@ -20,7 +20,7 @@ MonoBehaviour:
   bulletDamage: 2
   maxAmmoInMag: 10
   isAutomatic: 0
-  shootTime: 2
+  shootTime: 0.5
   reloadTime: 5
   recoilForce: 4
   recoilReturnSpeed: 7

@@ -171,10 +171,12 @@ public class WeaponHandler : NetworkBehaviour
 
         if (hit.transform.GetComponent<HealthComponent>())
 		{
+            Debug.Log("HIT ENNEMY");
             hit.transform.GetComponent<HealthComponent>().TakeDamageClientRpc(currentWeapon.bulletDamage, currentWeapon.weaponName);
         }
         else if (hit.transform.GetComponentInParent<HealthComponent>())
 		{
+            Debug.Log("HIT ENNEMY CHILD");
             hit.transform.GetComponentInParent<HealthComponent>().TakeDamageClientRpc(currentWeapon.bulletDamage, currentWeapon.weaponName);
         }
     }

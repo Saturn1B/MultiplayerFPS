@@ -26,4 +26,7 @@ EditorBuildSettings:
   - enabled: 0
     path: Assets/FPS/Scenes/SaussolTestScene.unity
     guid: 7889d010c1aaa4d4fb98b113cd6dac8d
+  - enabled: 1
+    path: Assets/03_Scene/TestMapPve.unity
+    guid: 754bd069742c09e41843d94f7c159ceb
   m_configObjects: {}
