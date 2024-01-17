@@ -35,9 +35,9 @@ public class EnnemiAi : MonoBehaviour
     {
         //Debug.Log("trigg rien");
 
-        if (other.CompareTag("Player"))
+        if (other.transform.GetComponent<PlayerNetworkHandler>())
         {
-            if (shooter && other.CompareTag("Player"))
+            if (shooter && other.transform.GetComponent<PlayerNetworkHandler>())
             {
                 // Obtient la position actuelle de l'objet
                 Vector3 raycastOrigin = transformShoot.position;
@@ -52,7 +52,7 @@ public class EnnemiAi : MonoBehaviour
                 if (Physics.Raycast(raycastOrigin, raycastDirection, out hit, raycastDistance))
                 {
                     // Vérifie si l'objet touché par le raycast est le joueur
-                    if (hit.collider.CompareTag("Player"))
+                    if (hit.transform.GetComponent<PlayerNetworkHandler>())
                     {
                         // Le joueur est détecté, arrête le mouvement et vise le joueur
                         targetFound = true;
@@ -73,7 +73,7 @@ public class EnnemiAi : MonoBehaviour
                 // Dessine une ligne représentant le raycast dans l'éditeur pour le débogage
                 Debug.DrawRay(raycastOrigin, raycastDirection * raycastDistance, Color.green);
             }
-            else if (!shooter && other.CompareTag("Player"))
+            else if (!shooter && other.transform.GetComponent<PlayerNetworkHandler>())
             {
                 ChasePlayer();
             }

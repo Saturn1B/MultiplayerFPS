@@ -10,6 +10,9 @@ public class HealthComponent : NetworkBehaviour
     public float maxHealth;
     public NetworkVariable<float> currentHealth = new NetworkVariable<float>(0, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner);
 
+    public delegate void OnDeathDelegate ();
+    public OnDeathDelegate OnDeath;
+
     public override void OnNetworkSpawn()
     {
         if (!IsOwner) return;
@@ -25,17 +28,6 @@ public class HealthComponent : NetworkBehaviour
                 HandleDeath();
             }
         };
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        if (!IsOwner) return;
-
-		//if (Input.GetKeyDown(KeyCode.T))
-		//{
-  //          TakeDamage(1, "here");
-		//}
     }
 
     [ClientRpc]
@@ -58,8 +50,10 @@ public class HealthComponent : NetworkBehaviour
 		{
             transform.position = new Vector3(0, 3, 0);
             StartCoroutine(InvincibilityFrame());
+            return;
 		}
-	}
+        Destroy(gameObject);
+    }
 
     private IEnumerator InvincibilityFrame()
 	{
@@ -69,4 +63,10 @@ public class HealthComponent : NetworkBehaviour
         yield return new WaitForSeconds(invicibilityTime - 0.5f);
         isInvicible = false;
 	}
+
+	private void OnDestroy()
+	{
+        if(OnDeath != null)
+            OnDeath.Invoke();
+    }
 }
