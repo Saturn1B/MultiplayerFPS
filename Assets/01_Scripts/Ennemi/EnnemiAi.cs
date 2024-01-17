@@ -32,7 +32,7 @@ public class EnnemiAi : MonoBehaviour
         navMeshAgent = GetComponent<NavMeshAgent>();
         initialPosition = transform.position;
 
-        
+       
     }
 
     public void OnTriggerStay(Collider other)
