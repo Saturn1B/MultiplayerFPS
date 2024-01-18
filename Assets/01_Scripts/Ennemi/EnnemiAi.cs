@@ -3,9 +3,10 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
+using Unity.Netcode;
 using static UnityEngine.GraphicsBuffer;
 
-public class EnnemiAi : MonoBehaviour
+public class EnnemiAi : NetworkBehaviour
 {
     public bool shooter;
 
@@ -26,17 +27,15 @@ public class EnnemiAi : MonoBehaviour
 
     public Transform transformShoot;
 
-    void Start()
-    {
-        
+    public override void OnNetworkSpawn()
+    {      
         navMeshAgent = GetComponent<NavMeshAgent>();
         initialPosition = transform.position;
-
-       
     }
 
     public void OnTriggerStay(Collider other)
     {
+        if (!IsServer) return;
         //Debug.Log("trigg rien");
 
         if (other.transform.GetComponent<PlayerNetworkHandler>())
@@ -133,7 +132,7 @@ public class EnnemiAi : MonoBehaviour
         {
             Debug.Log("pew pew");
 
-            targets.GetComponent<HealthComponent>().TakeDamageClientRpc(1f, gameObject.name);
+            targets.GetComponent<HealthComponent>().TakeDamageClientRpc(1f);
         }
         else
         {

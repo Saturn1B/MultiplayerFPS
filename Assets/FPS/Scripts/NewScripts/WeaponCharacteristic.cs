@@ -18,7 +18,7 @@ public class WeaponCharacteristic : ScriptableObject
 	[Header("Weapon Parameter")]
 	public string weaponName;
 	[Tooltip("Damage given by each bullet shot")]
-	public int bulletDamage;	
+	public float bulletDamage;	
 	[Tooltip("Total number of ammo in one magazine")]
 	public int maxAmmoInMag;
 	[Tooltip("Is the gun automatic and should keep shooting while holding the fire button")]

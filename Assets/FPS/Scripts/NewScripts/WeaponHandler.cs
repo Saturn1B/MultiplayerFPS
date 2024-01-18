@@ -27,6 +27,7 @@ public class WeaponHandler : NetworkBehaviour
     private bool hasAmmo;
     private bool isReloading;
     private bool isWaiting;
+    private float minimumDistance = 2.0f;
     [HideInInspector] public bool isAiming;
 
     [HideInInspector] public UnityEvent ammoUpdate;
@@ -54,8 +55,13 @@ public class WeaponHandler : NetworkBehaviour
         Debug.DrawRay(cam.transform.position, forwardRecoil * currentWeapon.shootDistance, Color.blue, 1);
 
         float currentDistance = currentWeapon.shootDistance;
-        if (Physics.Raycast(cam.transform.position, forwardRecoil, out hit, currentWeapon.shootDistance))
-            currentDistance = hit.distance;
+        if (Physics.Raycast(cam.transform.position, forwardRecoil, out hit, currentWeapon.shootDistance) && hit.transform.gameObject != this.gameObject)
+		{
+            if (hit.distance > minimumDistance)
+                currentDistance = hit.distance;
+			else
+                currentDistance = minimumDistance;
+        }
 
         lookAt = cam.transform.position + forwardRecoil * currentDistance;
         weaponObject.transform.LookAt(lookAt);
@@ -172,12 +178,12 @@ public class WeaponHandler : NetworkBehaviour
         if (hit.transform.GetComponent<HealthComponent>())
 		{
             Debug.Log("HIT ENNEMY");
-            hit.transform.GetComponent<HealthComponent>().TakeDamageClientRpc(currentWeapon.bulletDamage, currentWeapon.weaponName);
+            hit.transform.GetComponent<HealthComponent>().TakeDamageClientRpc(currentWeapon.bulletDamage);
         }
         else if (hit.transform.GetComponentInParent<HealthComponent>())
 		{
             Debug.Log("HIT ENNEMY CHILD");
-            hit.transform.GetComponentInParent<HealthComponent>().TakeDamageClientRpc(currentWeapon.bulletDamage, currentWeapon.weaponName);
+            hit.transform.GetComponentInParent<HealthComponent>().TakeDamageClientRpc(currentWeapon.bulletDamage);
         }
     }
 
