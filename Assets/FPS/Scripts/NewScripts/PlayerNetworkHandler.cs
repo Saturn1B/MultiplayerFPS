@@ -9,6 +9,7 @@ public class PlayerNetworkHandler : NetworkBehaviour
 	private PlayerController controller;
 	private WeaponHandler weaponHandler;
 	private ReanimationHandler reanimationHandler;
+	private HealthComponent healthComponent;
 
 	[SerializeField] private GameObject downDetector;
 	[HideInInspector] public NetworkVariable<bool> isDown = new NetworkVariable<bool>(false, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner);
@@ -21,6 +22,7 @@ public class PlayerNetworkHandler : NetworkBehaviour
 		controller = GetComponent<PlayerController>();
 		weaponHandler = GetComponent<WeaponHandler>();
 		reanimationHandler = GetComponentInChildren<ReanimationHandler>();
+		healthComponent = GetComponent<HealthComponent>();
 
 		Debug.Log("CONNECT PLAYER FIRST TIME");
 
@@ -109,12 +111,17 @@ public class PlayerNetworkHandler : NetworkBehaviour
 		weaponHandler.PlayerDown();
 		downDetector.SetActive(true);
 	}
-	public void PlayerUp()
+	[ClientRpc]
+	public void PlayerUpClientRpc()
 	{
+		if (!IsOwner) return;
+
 		isDown.Value = false;
 		controller.PlayerUp();
 		weaponHandler.PlayerUp();
 		downDetector.SetActive(false);
+
+		healthComponent.currentHealth.Value = healthComponent.maxHealth;
 	}
 
 	void OnTriggerEnter(Collider other)
@@ -128,6 +135,7 @@ public class PlayerNetworkHandler : NetworkBehaviour
 		{
 			Debug.Log("detect down player");
 			reanimationHandler.ActivateReaUi();
+			reanimationHandler.reaPlayers.AddListener(other.transform.GetComponentInParent<PlayerNetworkHandler>().PlayerUpClientRpc);
 		}
 	}
 
@@ -138,6 +146,7 @@ public class PlayerNetworkHandler : NetworkBehaviour
 		if (other.isTrigger && other.transform.GetComponentInParent<PlayerNetworkHandler>())
 		{
 			reanimationHandler.DeactivateReaUi();
+			reanimationHandler.reaPlayers.RemoveAllListeners();
 		}
 	}
 }

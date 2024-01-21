@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using Unity.Netcode;
+using UnityEngine.Events;
 
 public class ReanimationHandler : NetworkBehaviour
 {
@@ -13,7 +14,9 @@ public class ReanimationHandler : NetworkBehaviour
 
     private bool reaActive;
 
-    public void ActivateReaUi()
+	public UnityEvent reaPlayers;
+
+	public void ActivateReaUi()
 	{
         reaUI.SetActive(true);
         reaActive = true;
@@ -36,6 +39,7 @@ public class ReanimationHandler : NetworkBehaviour
 			{
 				fillImage.fillAmount = 1;
 				DeactivateReaUi();
+				reaPlayers.Invoke();
 				//rea player
 			}
 		}
