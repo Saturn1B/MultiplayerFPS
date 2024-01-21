@@ -35,7 +35,7 @@ public class PlayerController : NetworkBehaviour
     private bool isCrouching;
     private float crouchTransitionSpeed = .1f;
 
-    private bool isAttemptingToJump;
+    private bool canMove = true;
 
 	public override void OnNetworkSpawn()
 	{
@@ -61,7 +61,13 @@ public class PlayerController : NetworkBehaviour
 
         HandleMouseLook();
 
-        if (playerNetworkHandler.gameManager == null || !playerNetworkHandler.gameManager.canPlayerMove.Value) return;
+        if (playerNetworkHandler.gameManager == null || !playerNetworkHandler.gameManager.canPlayerMove.Value || !canMove)
+        {
+            velocity.y -= gravity * Time.deltaTime;
+            playerController.Move(velocity * Time.deltaTime);
+
+            return;
+        } 
 
         HandleMovement();
         HandleCrouch();
@@ -158,5 +164,16 @@ public class PlayerController : NetworkBehaviour
         playerController.enabled = false;
         transform.position = newPos;
         playerController.enabled = true;
+    }
+
+    public void PlayerDown()
+	{
+        canMove = false;
+        playerController.height = 0.5f;
+	}
+    public void PlayerUp()
+    {
+        canMove = true;
+        playerController.height = standingHeight;
     }
 }

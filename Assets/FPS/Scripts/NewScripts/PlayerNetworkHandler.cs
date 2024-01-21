@@ -7,6 +7,11 @@ public class PlayerNetworkHandler : NetworkBehaviour
 {
 	[HideInInspector] public GameManager gameManager;
 	private PlayerController controller;
+	private WeaponHandler weaponHandler;
+	private ReanimationHandler reanimationHandler;
+
+	[SerializeField] private GameObject downDetector;
+	[HideInInspector] public NetworkVariable<bool> isDown = new NetworkVariable<bool>(false, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner);
 
 	public override void OnNetworkSpawn()
 	{
@@ -14,6 +19,8 @@ public class PlayerNetworkHandler : NetworkBehaviour
 
 		NetworkManager.Singleton.SceneManager.OnSceneEvent += SceneManager_OnSceneEvent;
 		controller = GetComponent<PlayerController>();
+		weaponHandler = GetComponent<WeaponHandler>();
+		reanimationHandler = GetComponentInChildren<ReanimationHandler>();
 
 		Debug.Log("CONNECT PLAYER FIRST TIME");
 
@@ -92,6 +99,45 @@ public class PlayerNetworkHandler : NetworkBehaviour
 		if (choosenSpawn != null)
 		{
 			controller.Teleport(choosenSpawn.transform.position);
+		}
+	}
+
+	public void PlayerDown()
+	{
+		isDown.Value = true;
+		controller.PlayerDown();
+		weaponHandler.PlayerDown();
+		downDetector.SetActive(true);
+	}
+	public void PlayerUp()
+	{
+		isDown.Value = false;
+		controller.PlayerUp();
+		weaponHandler.PlayerUp();
+		downDetector.SetActive(false);
+	}
+
+	void OnTriggerEnter(Collider other)
+	{
+		if (!IsOwner) return;
+
+		Debug.Log("detect: " + other.gameObject.name);
+
+
+		if (other.isTrigger && other.transform.GetComponentInParent<PlayerNetworkHandler>() && other.transform.GetComponentInParent<PlayerNetworkHandler>().isDown.Value)
+		{
+			Debug.Log("detect down player");
+			reanimationHandler.ActivateReaUi();
+		}
+	}
+
+	void OnTriggerExit(Collider other)
+	{
+		if (!IsOwner) return;
+
+		if (other.isTrigger && other.transform.GetComponentInParent<PlayerNetworkHandler>())
+		{
+			reanimationHandler.DeactivateReaUi();
 		}
 	}
 }

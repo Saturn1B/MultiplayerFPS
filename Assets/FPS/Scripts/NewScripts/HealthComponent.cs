@@ -14,6 +14,8 @@ public class HealthComponent : NetworkBehaviour
     public OnDeathDelegate OnDeath;
     [SerializeField] private bool dontDestroy;
 
+    private GameManager gameManager;
+
     public override void OnNetworkSpawn()
     {
         if (!IsOwner) return;
@@ -49,10 +51,20 @@ public class HealthComponent : NetworkBehaviour
 
     private void HandleDeath()
 	{
-		if (GetComponent<PlayerController>())
+		if (GetComponent<PlayerNetworkHandler>())
 		{
-            GetComponent<PlayerNetworkHandler>().ChooseSpawn();
-            StartCoroutine(InvincibilityFrame());
+            if (gameManager == null)
+                gameManager = FindObjectOfType<GameManager>();
+
+            if(gameManager._currentGameMode.Value == 0)
+			{
+                GetComponent<PlayerNetworkHandler>().PlayerDown();
+			}
+			else
+			{
+                GetComponent<PlayerNetworkHandler>().ChooseSpawn();
+                StartCoroutine(InvincibilityFrame());
+            }
             return;
 		}
 

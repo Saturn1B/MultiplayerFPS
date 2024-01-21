@@ -32,6 +32,8 @@ public class WeaponHandler : NetworkBehaviour
 
     [HideInInspector] public UnityEvent ammoUpdate;
 
+    [HideInInspector] public bool canUseWeapon = true;
+
     public override void OnNetworkSpawn()
     {
         if (!IsOwner) return;
@@ -46,7 +48,7 @@ public class WeaponHandler : NetworkBehaviour
 
     private void Update()
     {
-        if (!IsOwner) return;
+        if (!IsOwner || !canUseWeapon) return;
 
         Vector3 forwardRecoil = cam.transform.forward + recoilVector;
 
@@ -203,4 +205,15 @@ public class WeaponHandler : NetworkBehaviour
 	{
         return hasAmmo && !isReloading && !isWaiting;
 	}
+
+    public void PlayerDown()
+    {
+        canUseWeapon = false;
+        weaponObject.SetActive(false);
+    }
+    public void PlayerUp()
+    {
+        canUseWeapon = true;
+        weaponObject.SetActive(true);
+    }
 }

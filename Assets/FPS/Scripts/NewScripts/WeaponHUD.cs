@@ -29,7 +29,14 @@ public class WeaponHUD : MonoBehaviour
 
     private void LateUpdate()
     {
-        Vector2 viewportPos = cam.WorldToViewportPoint(weaponHandler.lookAt);
-        rectTransform.anchoredPosition = new Vector2(0, Screen.height *  viewportPos.y);
-	}
+		if (weaponHandler.canUseWeapon)
+		{
+            Vector2 viewportPos = cam.WorldToViewportPoint(weaponHandler.lookAt);
+            rectTransform.anchoredPosition = new Vector2(0, Screen.height * viewportPos.y);
+        }
+		else
+		{
+            rectTransform.anchoredPosition = new Vector2(0, Screen.height / 2);
+        }
+    }
 }
