@@ -152,6 +152,9 @@ public class PlayerController : NetworkBehaviour
 
     public void Teleport(Vector3 newPos)
 	{
+        if(playerController == null)
+            playerController = GetComponent<CharacterController>();
+
         playerController.enabled = false;
         transform.position = newPos;
         playerController.enabled = true;

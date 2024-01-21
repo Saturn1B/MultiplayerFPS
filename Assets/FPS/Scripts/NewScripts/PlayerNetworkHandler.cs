@@ -11,14 +11,20 @@ public class PlayerNetworkHandler : NetworkBehaviour
 	public override void OnNetworkSpawn()
 	{
 		StartCoroutine(WaitForGM());
+
 		NetworkManager.Singleton.SceneManager.OnSceneEvent += SceneManager_OnSceneEvent;
 		controller = GetComponent<PlayerController>();
-	}
+
+		Debug.Log("CONNECT PLAYER FIRST TIME");
+
+		if (IsOwner)
+            ChooseSpawn();
+    }
 
 	private void Start()
 	{
-		if (IsOwner)
-			ChooseSpawn();
+		//if (IsOwner)
+			//ChooseSpawn();
 	}
 
 	private IEnumerator WaitForGM()
@@ -28,6 +34,11 @@ public class PlayerNetworkHandler : NetworkBehaviour
 			gameManager = FindObjectOfType<GameManager>();
 			yield return null;
 		}
+
+		gameManager.gameManagerLoadedOnScene.AddListener(() =>
+		{
+			gameManager.ConnectPlayerServerRpc();
+		});
 
 		switch (gameManager._currentGameMode.Value)
 		{

@@ -13,12 +13,14 @@ public class GameManager : NetworkBehaviour
     public NetworkVariable<int> connectedPlayers = new NetworkVariable<int>(0, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Server);
     public NetworkVariable<bool> canPlayerMove = new NetworkVariable<bool>(false, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Server);
 
-    public UnityEvent changeScene;
+    public UnityEvent allPlayersLoaded;
+    public UnityEvent gameManagerLoadedOnScene;
 
 	public override void OnNetworkSpawn()
 	{
         if (!IsHost) return;
 
+        NetworkManager.Singleton.SceneManager.OnSceneEvent += SceneManager_OnSceneEvent;
         connectedPlayers.OnValueChanged += ConnectedPlayersCallback;
 	}
 
@@ -55,8 +57,13 @@ public class GameManager : NetworkBehaviour
 	{
         if(current >= maxPlayers.Value)
 		{
+            allPlayersLoaded.Invoke();
             canPlayerMove.Value = true;
 		}
+        else
+        {
+            canPlayerMove.Value = false;
+        }
 	}
 
     [ServerRpc(RequireOwnership = false)]
@@ -69,6 +76,19 @@ public class GameManager : NetworkBehaviour
 	{
         //TO DO handle different scene rerout for all the different game mode
         NetworkManager.SceneManager.LoadScene(sceneName, LoadSceneMode.Single);
+    }
+
+    private void SceneManager_OnSceneEvent(SceneEvent sceneEvent)
+    {
+        switch (sceneEvent.SceneEventType)
+        {
+            case SceneEventType.LoadEventCompleted:
+                connectedPlayers.Value = 0;
+                gameManagerLoadedOnScene.Invoke();
+                break;
+            default:
+                break;
+        }
     }
 }
 

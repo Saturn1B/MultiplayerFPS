@@ -105,6 +105,8 @@ public class LobbyUI : MonoBehaviour
 
         quitButton.onClick.AddListener(() =>
         {
+            if (lobbyManager.IsLobbyHost())
+                startButtonObj.SetActive(false);
             lobbyManager.LeaveLobby();
             SwitchPanel(LobbyListPanel);
         });
@@ -147,7 +149,7 @@ public class LobbyUI : MonoBehaviour
         newPanel.SetActive(true);
         currentPanel = newPanel;
 	}
-    
+
     public void SwitchLobbyPanel()
 	{
         LobbyListPanel.SetActive(false);
@@ -162,7 +164,7 @@ public class LobbyUI : MonoBehaviour
             Destroy(child.gameObject);
 		}
 	}
-    
+
     public void ClearPlayerDisplay()
 	{
 		foreach (Transform child in playerListContainer)
@@ -241,7 +243,7 @@ public class LobbyUI : MonoBehaviour
     void PvPDropdownValueChanged(TMP_Dropdown change)
     {
         pvpGameMode = (PvPGameMode)change.value; //Convert dropwdown value to enum
-    }    
+    }
     void GlobalDropdownValueChanged(TMP_Dropdown change)
     {
         globalGameMode = (GlobalGameMode)change.value; //Convert dropwdown value to enum
