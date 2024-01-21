@@ -111,6 +111,11 @@ public class PlayerNetworkHandler : NetworkBehaviour
 		weaponHandler.PlayerDown();
 		downDetector.SetActive(true);
 	}
+	[ServerRpc(RequireOwnership = false)]
+	public void PlayerUpServerRpc()
+	{
+		PlayerUpClientRpc();
+	}
 	[ClientRpc]
 	public void PlayerUpClientRpc()
 	{
@@ -135,7 +140,7 @@ public class PlayerNetworkHandler : NetworkBehaviour
 		{
 			Debug.Log("detect down player");
 			reanimationHandler.ActivateReaUi();
-			reanimationHandler.reaPlayers.AddListener(other.transform.GetComponentInParent<PlayerNetworkHandler>().PlayerUpClientRpc);
+			reanimationHandler.reaPlayers.AddListener(other.transform.GetComponentInParent<PlayerNetworkHandler>().PlayerUpServerRpc);
 		}
 	}
 
