@@ -23,6 +23,7 @@ public class TowerBoss : NetworkBehaviour
     private HealthComponent healthComponent;
 
     public bool isDestroyed = false;
+    public GameObject fx;
     
     private void Start()
     {
@@ -50,6 +51,7 @@ public class TowerBoss : NetworkBehaviour
         {
             isDestroyed = true;
             modAttack = false;
+            fx.SetActive(false);
         }
     }
 

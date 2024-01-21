@@ -42,17 +42,17 @@ public class BossManager : NetworkBehaviour
             StartCoroutine(DespawnBossShield());
             gates[gateOpenA].GoClose();
         }
-        if (towers[gateOpenA].isDestroyed && towers[gateOpenA].isDestroyed && stepB == false)
+        if (towers[gateOpenA].isDestroyed && towers[gateOpenB].isDestroyed && stepB == false)
         {
-            stepA = true;
+            stepB = true; 
             StartCoroutine(DespawnBossShield());
-            gates[gateOpenA].GoClose();
+            gates[gateOpenA].GoClose(); gates[gateOpenB].GoClose();
         }
-        if (towers[gateOpenA].isDestroyed && stepA == false)
+        if (towers[gateOpenA].isDestroyed && towers[gateOpenB].isDestroyed && towers[gateOpenC].isDestroyed && stepC == false)
         {
-            stepA = true;
+            stepC = true;
             StartCoroutine(DespawnBossShield());
-            gates[gateOpenA].GoClose();
+            gates[gateOpenA].GoClose(); gates[gateOpenB].GoClose(); gates[gateOpenC].GoClose();
         }
 
     }
@@ -69,30 +69,39 @@ public class BossManager : NetworkBehaviour
     {
         if (!IsServer) return;
 
-        if (stepA && stepB && stepC)
-        {
-            for (int i = 0; i < 1; i++)
-            {
-                gates[i].GoOpen();
-                towers[i].modAttack = true;
-            }
-            return;
-        }
-        if (stepA && stepB && stepC == false)
+        if (stepA && !stepB && !stepC)
         {
             for (int i = 0; i < 2; i++)
             {
                 gates[i].GoOpen();
+                towers[i].GetComponent<HealthComponent>().currentHealth.Value = 100;
                 towers[i].modAttack = true;
+                towers[i].fx.SetActive(true);
+                towers[i].isDestroyed = false;
             }
             return;
         }
-        if (stepA && stepB == false && stepC == false)
+        if (stepA && stepB && !stepC)
+        {
+            for (int i = 0; i < 3; i++)
+            {
+                gates[i].GoOpen();
+                towers[i].GetComponent<HealthComponent>().currentHealth.Value = 100;
+                towers[i].modAttack = true;
+                towers[i].fx.SetActive(true);
+                towers[i].isDestroyed = false;
+            }
+            return;
+        }
+        if (stepA && stepB && stepC)
         {
             for (int i = 0; i < towers.Length; i++)
             {
                 gates[i].GoOpen();
+                towers[i].GetComponent<HealthComponent>().currentHealth.Value = 100;
                 towers[i].modAttack = true;
+                towers[i].fx.SetActive(true);
+                towers[i].isDestroyed = false;
             }
             return;
         }
@@ -119,7 +128,7 @@ public class BossManager : NetworkBehaviour
 
         shield.SetActive(true);
 
-
+        SapwnTower();
     }
 
     
