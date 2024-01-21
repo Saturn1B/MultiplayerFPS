@@ -12,6 +12,7 @@ public class HealthComponent : NetworkBehaviour
 
     public delegate void OnDeathDelegate ();
     public OnDeathDelegate OnDeath;
+    [SerializeField] private bool dontDestroy;
 
     public override void OnNetworkSpawn()
     {
@@ -54,8 +55,17 @@ public class HealthComponent : NetworkBehaviour
             StartCoroutine(InvincibilityFrame());
             return;
 		}
-        gameObject.GetComponent<NetworkObject>().Despawn();
-        //Destroy(gameObject);
+
+        if (dontDestroy)
+        {
+
+        }
+        else
+        {
+            gameObject.GetComponent<NetworkObject>().Despawn();
+            //Destroy(gameObject);
+        }
+
     }
 
     private IEnumerator InvincibilityFrame()

@@ -1,160 +1,126 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.Netcode;
 using Unity.Services.Lobbies.Models;
 using UnityEngine;
 using UnityEngine.Rendering;
 using UnityEngine.XR;
 
-public class BossManager : MonoBehaviour
+public class BossManager : NetworkBehaviour
 {
     public Gate[] gates;
-    public int gateOpen;
-    public float heal;
-    private float startHeal = 10000;
-
+    private int gateOpenA = 0;
+    private int gateOpenB = 1;
+    private int gateOpenC = 2;
+    private int gateOpenD = 3;
+    private float startHeal;
                                 //av laser
     private bool stepA = false; // bumbaaa
     private bool stepB = false; // les 2 
-    private bool stepC = false; // 
+    private bool stepC = false; 
 
-    
+    private GameManager gameManager;
 
-    public bool modAttack = false;
-    private bool attack = false;
+    public TowerBoss[] towers;
 
-    //public PlayerNetworkHandler[] playerNetworkHandler;
-    public GameObject[] players;
-
-    private int maTarget;
-    public Transform shooter;
-    public Transform weapon;
-
-    public GameObject towerA;
-    public GameObject towerB;
-
-    public float rotationSpeed = 2.0f;
-
-
+    public GameObject shield;
+ 
     private void Start()
     {
-        heal = startHeal;
+        gameManager = FindAnyObjectByType<GameManager>();
 
-        maTarget = Random.Range(0, players.Length);
-
-        StartCoroutine(ChangeTargets());
+        StartCoroutine(WhatForStartBoss());
     }
 
-
-    public void TakeDamage(float damage)
-    {
-        heal -= damage;
-        Debug.Log(heal);
-
-        if (heal <= startHeal * 0.1 && stepC == false)
-        {
-            Debug.Log("Ta perdu 90%");stepC = true;
-            gates[gateOpen].GoClose();
-            return;
-        }
-        if (heal <= startHeal * 0.4 && stepB == false)
-        {
-            Debug.Log("Ta perdu 60%"); stepB= true;
-            gates[gateOpen].GoClose();
-            return;
-        }
-        if (heal <= startHeal * 0.7 && stepA == false)
-        {
-            Debug.Log("Ta perdu 30%"); stepA= true;
-            gates[gateOpen].GoClose();
-            return;
-        }
-
-    }
     public void Update()
     {
-        if (Input.GetKeyDown(KeyCode.A))
+        if (!IsServer) return;
+
+        if (towers[gateOpenA].isDestroyed && stepA == false)
         {
-            int rand = Random.Range(0, gates.Length);
-
-            this.gameObject.transform.SetParent(gates[rand].bossPosition.transform);
-            this.gameObject.transform.localPosition = Vector3.zero;
-            this.gameObject.transform.localPosition = new Vector3(0,-2.7f,0);
-
-            gates[rand].GoOpen();
-            gateOpen = rand;
-
-            modAttack = true;
+            stepA = true;  
+            StartCoroutine(DespawnBossShield());
+            gates[gateOpenA].GoClose();
+        }
+        if (towers[gateOpenA].isDestroyed && towers[gateOpenA].isDestroyed && stepB == false)
+        {
+            stepA = true;
+            StartCoroutine(DespawnBossShield());
+            gates[gateOpenA].GoClose();
+        }
+        if (towers[gateOpenA].isDestroyed && stepA == false)
+        {
+            stepA = true;
+            StartCoroutine(DespawnBossShield());
+            gates[gateOpenA].GoClose();
         }
 
-        if (Input.GetKeyDown(KeyCode.E))
-        {
-            TakeDamage(1000);
-        }
-
-        TargetPlayer(maTarget);
     }
-    
-    private void TargetPlayer(int num)
+
+    private void RedyToStart()
     {
-        // Calculer la direction vers le joueur
-        Vector3 directionToPlayer = players[num].transform.position - weapon.position;
+        if (!IsServer) return;
 
-        // Calculer la rotation pour faire face à la direction du joueur en douceur
-        Quaternion targetRotation = Quaternion.LookRotation(directionToPlayer);
+        gates[gateOpenA].GoOpen();
+        towers[gateOpenA].modAttack = true;
+    }
 
-        // Interpoler en douceur entre la rotation actuelle et la rotation cible
-        weapon.rotation = Quaternion.Slerp(weapon.rotation, targetRotation, Time.deltaTime * rotationSpeed);
+    private void SapwnTower()
+    {
+        if (!IsServer) return;
 
-
-
-        // Obtenez la direction du canon
-        Vector3 canonDirection = weapon.forward;
-
-        // Déclarez une variable RaycastHit pour stocker les informations sur l'objet touché par le rayon
-        RaycastHit hit;
-
-        // Utilisez Physics.Raycast pour tirer le rayon depuis la position du canon dans la direction du canon
-        if (Physics.Raycast(weapon.position, canonDirection, out hit))
+        if (stepA && stepB && stepC)
         {
-            if (/*hit.transform.GetComponent<PlayerNetworkHandler>()*/ hit.transform.CompareTag("Player"))
+            for (int i = 0; i < 1; i++)
             {
-                // Le joueur est détecté, arrête le mouvement et vise le joueur
-                if (attack == false)
-                {
-                    StartCoroutine(ChargeDamage());
-                }
-                Debug.Log("beeeeeteuuu");
+                gates[i].GoOpen();
+                towers[i].modAttack = true;
             }
+            return;
+        }
+        if (stepA && stepB && stepC == false)
+        {
+            for (int i = 0; i < 2; i++)
+            {
+                gates[i].GoOpen();
+                towers[i].modAttack = true;
+            }
+            return;
+        }
+        if (stepA && stepB == false && stepC == false)
+        {
+            for (int i = 0; i < towers.Length; i++)
+            {
+                gates[i].GoOpen();
+                towers[i].modAttack = true;
+            }
+            return;
+        }
+        
+        
+    }
 
+    private IEnumerator WhatForStartBoss()// attend que les joueur charge 
+    {
+        while (!gameManager.canPlayerMove.Value)
+        {
+            yield return null;
 
         }
 
-        // Dessine une ligne représentant le raycast dans l'éditeur pour le débogage
-        Debug.DrawRay(weapon.position, canonDirection * 100, Color.green);
+        RedyToStart(); Debug.Log("get redy for start");
     }
 
-
-    public IEnumerator ChangeTargets() 
-    { 
-        yield return new WaitForSeconds(Random.Range(8, 20));
-
-        maTarget = Random.Range(0, players.Length);
-
-        Debug.Log("Boss change de target" + maTarget);
-
-        StartCoroutine(ChangeTargets());
-    }
-
-
-    public IEnumerator ChargeDamage()
+    private IEnumerator DespawnBossShield()// fait despawn de shield du boss apres qu'un tower soit destroy
     {
-        attack = true;
+        shield.SetActive(false);
 
-        yield return new WaitForSeconds(Random.Range(1, 4));
+        yield return new WaitForSeconds(30f);
+
+        shield.SetActive(true);
 
 
-        Debug.Log("Boss charge damage " + 2);
-
-        attack = false;
     }
+
+    
 }

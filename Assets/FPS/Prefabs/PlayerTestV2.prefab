@@ -3600,6 +3600,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d50e6dcecfb64fa4e897793da48c0330, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  skinnedMeshRenderer: {fileID: 0}
 --- !u!1 &6076870940061060886
 GameObject:
   m_ObjectHideFlags: 0
@@ -4603,7 +4604,6 @@ GameObject:
   m_Component:
   - component: {fileID: 4433115315605311173}
   - component: {fileID: 4335966368662215076}
-  - component: {fileID: 3591897038024345621}
   - component: {fileID: 1378438131395564697}
   m_Layer: 0
   m_Name: PlayerTestV2
@@ -4649,18 +4649,6 @@ MonoBehaviour:
   SpawnWithObservers: 1
   DontDestroyWithOwner: 0
   AutoObjectParentSync: 1
---- !u!114 &3591897038024345621
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7559433753169141756}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: a43db075e3947da4a9d7e20e98194a8d, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!114 &1378438131395564697
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4674,11 +4662,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   SyncPositionX: 1
-  SyncPositionY: 0
+  SyncPositionY: 1
   SyncPositionZ: 1
-  SyncRotAngleX: 0
-  SyncRotAngleY: 0
-  SyncRotAngleZ: 0
+  SyncRotAngleX: 1
+  SyncRotAngleY: 1
+  SyncRotAngleZ: 1
   SyncScaleX: 0
   SyncScaleY: 0
   SyncScaleZ: 0

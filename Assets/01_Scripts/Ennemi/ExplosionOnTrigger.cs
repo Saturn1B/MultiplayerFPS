@@ -2,26 +2,25 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using Unity.FPS.Game;
+using Unity.Netcode;
 using UnityEngine;
 
-public class ExplosionOnTrigger : MonoBehaviour
+public class ExplosionOnTrigger : NetworkBehaviour
 {
     public float explosionForce = 10.0f;
     public float explosionRadius = 5.0f;
     public float upwardsModifier = 3.0f;
 
-    public Health health;
-    public Health playerHealth;
 
     void OnTriggerEnter(Collider other)
     {
-        if (other.CompareTag("Player"))
+        if (other.transform.GetComponent<PlayerNetworkHandler>())
         {
-            Explode(other.GetComponent<Health>()); Debug.Log("ouiiii");
+            Explode(other.GetComponent<HealthComponent>()); Debug.Log("ouiiii");
         }
     }
 
-    void Explode(Health player)
+    void Explode(HealthComponent player)
     {
         Collider[] colliders = Physics.OverlapSphere(transform.position, explosionRadius);
 
@@ -38,8 +37,8 @@ public class ExplosionOnTrigger : MonoBehaviour
         // Ajoutez ici le code pour les effets visuels ou sonores de l'explosion, si nécessaire.
 
         // Détruit l'objet après l'explosion
-        player.Kill();
+        player.TakeDamageClientRpc(6f);
 
-        health.Kill();
+        gameObject.GetComponentInParent<NetworkObject>().Despawn();
     }
 }

@@ -5,11 +5,16 @@ using Unity.Netcode;
 
 public class AnimController : NetworkBehaviour
 {
-    private Animator animator; // Référence vers l'Animator
+    public Animator animator; // Référence vers l'Animator
     public GameObject skinnedMeshRenderer;
+    public GameObject basicSkin;
 
     void Start()
     {
+        if (!IsLocalPlayer) return;
+
+        basicSkin.SetActive(false);
+        skinnedMeshRenderer.SetActive(true);
         // Obtention de la référence de l'Animator
         animator = GetComponent<Animator>();
     }
@@ -18,8 +23,7 @@ public class AnimController : NetworkBehaviour
     {
         if (!IsOwner) return;
 
-        //skinnedMeshRenderer.SetActive(false);
-        // Vérifie si la touche W est pressée       
+     
 
         if (Input.GetKeyDown(KeyCode.Z))
         {
