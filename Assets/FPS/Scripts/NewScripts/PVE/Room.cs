@@ -16,6 +16,7 @@ public class Room : NetworkBehaviour
 {
 	[SerializeField] private RoomType roomType;
 	[SerializeField] private List<GameObject> roomEnemys;
+	[SerializeField] private Door door;
 
 	private int playerOnRoom;
 	private GameManager gameManager;
@@ -29,6 +30,9 @@ public class Room : NetworkBehaviour
 		{
 			enemy.GetComponentInChildren<HealthComponent>().OnDeath += OnEnemyDeathServerRpc;
 		}
+
+		if(roomType == RoomType.STARTING)
+			gameManager.allPlayersLoaded.AddListener(OpenDoor);
 	}
 
 	[ServerRpc(RequireOwnership = false)]
@@ -70,6 +74,7 @@ public class Room : NetworkBehaviour
 	{
 		Debug.Log("Open Door");
 		isDoorOpened = true;
+		door.OpenDoor();
 	}
 
 	private void ActivatePortal()
