@@ -201,6 +201,16 @@ public class WeaponHandler : NetworkBehaviour
         hasAmmo = true;
 	}
 
+    [ClientRpc]
+    public void ReloadClientRpc()
+	{
+        currentAmmo = currentWeapon.maxAmmoInMag;
+        hasAmmo = true;
+        isReloading = false;
+        isWaiting = false;
+        ammoUpdate.Invoke();
+    }
+
     private bool CanShoot()
 	{
         return hasAmmo && !isReloading && !isWaiting;

@@ -36,6 +36,7 @@ public class PlayerController : NetworkBehaviour
     private float crouchTransitionSpeed = .1f;
 
     private bool canMove = true;
+    [HideInInspector] public bool isGameOver;
 
 	public override void OnNetworkSpawn()
 	{
@@ -57,7 +58,7 @@ public class PlayerController : NetworkBehaviour
 
     private void Update()
     {
-        if (!IsOwner && !playerController.enabled) return;
+        if (!IsOwner || !playerController.enabled || isGameOver) return;
 
         HandleMouseLook();
 

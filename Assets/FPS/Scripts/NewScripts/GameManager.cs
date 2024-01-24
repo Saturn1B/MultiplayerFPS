@@ -12,9 +12,12 @@ public class GameManager : NetworkBehaviour
     public NetworkVariable<int> maxPlayers = new NetworkVariable<int>(0, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Server);
     public NetworkVariable<int> connectedPlayers = new NetworkVariable<int>(0, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Server);
     public NetworkVariable<bool> canPlayerMove = new NetworkVariable<bool>(false, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Server);
+    public NetworkVariable<int> playersDown = new NetworkVariable<int>(0, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Server);
+
 
     public UnityEvent allPlayersLoaded;
     public UnityEvent gameManagerLoadedOnScene;
+    public UnityEvent gameOver;
 
 	public override void OnNetworkSpawn()
 	{
@@ -22,6 +25,7 @@ public class GameManager : NetworkBehaviour
 
         NetworkManager.Singleton.SceneManager.OnSceneEvent += SceneManager_OnSceneEvent;
         connectedPlayers.OnValueChanged += ConnectedPlayersCallback;
+        playersDown.OnValueChanged += DownPlayerCallback;
 	}
 
 	[ServerRpc]
@@ -64,6 +68,14 @@ public class GameManager : NetworkBehaviour
         {
             canPlayerMove.Value = false;
         }
+	}
+
+    void DownPlayerCallback(int previous, int current)
+	{
+        if(current >= maxPlayers.Value)
+		{
+            gameOver.Invoke();
+		}
 	}
 
     [ServerRpc(RequireOwnership = false)]

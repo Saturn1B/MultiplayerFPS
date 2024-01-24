@@ -5,6 +5,7 @@ using TMPro;
 using UnityEngine.UI;
 using Unity.Services.Lobbies.Models;
 using System;
+using Unity.Netcode;
 
 public enum PvPGameMode
 {

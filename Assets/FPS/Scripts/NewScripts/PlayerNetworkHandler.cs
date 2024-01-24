@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using Unity.Netcode;
+using UnityEngine.SceneManagement;
 
 public class PlayerNetworkHandler : NetworkBehaviour
 {
@@ -10,6 +11,7 @@ public class PlayerNetworkHandler : NetworkBehaviour
 	private WeaponHandler weaponHandler;
 	private ReanimationHandler reanimationHandler;
 	private HealthComponent healthComponent;
+	private GameOverHandler gameOverHandler;
 
 	[SerializeField] private GameObject downDetector;
 	[HideInInspector] public NetworkVariable<bool> isDown = new NetworkVariable<bool>(false, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner);
@@ -23,6 +25,7 @@ public class PlayerNetworkHandler : NetworkBehaviour
 		weaponHandler = GetComponent<WeaponHandler>();
 		reanimationHandler = GetComponentInChildren<ReanimationHandler>();
 		healthComponent = GetComponent<HealthComponent>();
+		gameOverHandler = GetComponentInChildren<GameOverHandler>();
 
 		Debug.Log("CONNECT PLAYER FIRST TIME");
 
@@ -43,6 +46,11 @@ public class PlayerNetworkHandler : NetworkBehaviour
 			gameManager = FindObjectOfType<GameManager>();
 			yield return null;
 		}
+
+		gameManager.gameOver.AddListener(() =>
+		{
+			HandleGameOverClientRpc();
+		});
 
 		gameManager.gameManagerLoadedOnScene.AddListener(() =>
 		{
@@ -70,6 +78,17 @@ public class PlayerNetworkHandler : NetworkBehaviour
 			gameManager.ConnectPlayerServerRpc();
 		}
 
+	}
+
+	[ClientRpc]
+	private void HandleGameOverClientRpc()
+	{
+		if (!IsOwner) return;
+
+		Cursor.lockState = CursorLockMode.None;
+		Cursor.visible = true;
+		controller.isGameOver = true;
+		gameOverHandler.GameOver();
 	}
 
 	private void SceneManager_OnSceneEvent(SceneEvent sceneEvent)
@@ -110,11 +129,21 @@ public class PlayerNetworkHandler : NetworkBehaviour
 		controller.PlayerDown();
 		weaponHandler.PlayerDown();
 		downDetector.SetActive(true);
+		PlayerDownServerRpc();
 	}
+	[ServerRpc]
+	void PlayerDownServerRpc()
+	{
+		gameManager.playersDown.Value++;
+	}
+
 	[ServerRpc(RequireOwnership = false)]
 	public void PlayerUpServerRpc()
 	{
 		PlayerUpClientRpc();
+
+		if(gameManager.playersDown.Value > 0)
+			gameManager.playersDown.Value--;
 	}
 	[ClientRpc]
 	public void PlayerUpClientRpc()
@@ -135,6 +164,7 @@ public class PlayerNetworkHandler : NetworkBehaviour
 
 		Debug.Log("detect: " + other.gameObject.name);
 
+		if (other.transform.parent && other.transform.parent.gameObject == this.gameObject) return;
 
 		if (other.isTrigger && other.transform.GetComponentInParent<PlayerNetworkHandler>() && other.transform.GetComponentInParent<PlayerNetworkHandler>().isDown.Value)
 		{
@@ -152,6 +182,33 @@ public class PlayerNetworkHandler : NetworkBehaviour
 		{
 			reanimationHandler.DeactivateReaUi();
 			reanimationHandler.reaPlayers.RemoveAllListeners();
+		}
+	}
+
+	[ClientRpc]
+	public void RestartPlayerClientRpc()
+	{
+		PlayerUpServerRpc();
+		weaponHandler.ReloadClientRpc();
+		Cursor.lockState = CursorLockMode.Locked;
+		Cursor.visible = false;
+		controller.isGameOver = false;
+		gameOverHandler.DeactivateGameOver();
+	}
+
+	[ClientRpc]
+	public void DisconnectPlayerClientRpc()
+	{
+		NetworkManager.Singleton.Shutdown();
+		Cleanup();
+		SceneManager.LoadScene("PhobosTestScene", LoadSceneMode.Single);
+	}
+
+	private void Cleanup()
+	{
+		if (NetworkManager.Singleton != null)
+		{
+			Destroy(NetworkManager.Singleton.gameObject);
 		}
 	}
 }
