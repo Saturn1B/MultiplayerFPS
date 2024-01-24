@@ -17,6 +17,7 @@ public class Room : NetworkBehaviour
 	[SerializeField] private RoomType roomType;
 	[SerializeField] private List<GameObject> roomEnemys;
 	[SerializeField] private Door door;
+	[SerializeField] private Teleporter teleporter;
 
 	private int playerOnRoom;
 	private GameManager gameManager;
@@ -80,6 +81,7 @@ public class Room : NetworkBehaviour
 	private void ActivatePortal()
 	{
 		Debug.Log("Activate Portal");
+		teleporter.ActivateTeleporter();
 	}
 
 	private void OnTriggerEnter(Collider other)
