@@ -9,7 +9,7 @@ public class Shotgun : CustomWeapon
 
     protected override void Shoot()
 	{
-        for (int i = 0; i < bulletNumber; i++)
+        /*for (int i = 0; i < bulletNumber; i++)
         {
             // Générer une direction aléatoire dans un cône
             Vector3 direction = new Vector3(Random.Range(-spreadAngle, spreadAngle) * Mathf.Cos(Random.Range(0, 2 * Mathf.PI)), Random.Range(-spreadAngle, spreadAngle) * Mathf.Sin(Random.Range(0, 2 * Mathf.PI)), ralspread);
@@ -28,6 +28,6 @@ public class Shotgun : CustomWeapon
 
             // Affichage visuel du raycast
             Debug.DrawRay(startPoint.position, direction * maxRaycastDistance, Color.red, 3f);
-        }
+        }*/
     }
 }

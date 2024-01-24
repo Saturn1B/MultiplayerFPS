@@ -11,6 +11,7 @@ public class ChacunPourSoi : MonoBehaviour
     public float healBonusChance = 0.5f;
     public int maxPlayers = 10;
     public int killsToWin = 5;
+    public int respawnCD = 3;
 
     private List<Transform> availableSpawnPoints = new List<Transform>();
     private List<GameObject> players = new List<GameObject>();
@@ -18,6 +19,7 @@ public class ChacunPourSoi : MonoBehaviour
 
     void Start()
     {
+        //GameObject eliminatingPlayer = /* Remplacez par le moyen de récupérer le joueur qui élimine */;
         InitializeSpawnPoints();
         InstantiatePlayers();
     }
@@ -70,9 +72,8 @@ public class ChacunPourSoi : MonoBehaviour
             {
                 Instantiate(healBonusPrefab, playerToEliminate.transform.position, Quaternion.identity);
             }
-
-            // Augmentez le nombre de kills du joueur éliminé
-            playerKills[playerToEliminate]++;
+            
+            //playerKills[eliminatingPlayer] ++;
 
             // Lance la coroutine pour réapparition après 5 secondes
             StartCoroutine(RespawnPlayerAfterDelay(playerToEliminate));
@@ -81,7 +82,7 @@ public class ChacunPourSoi : MonoBehaviour
 
     IEnumerator RespawnPlayerAfterDelay(GameObject playerToRespawn)
     {
-        yield return new WaitForSeconds(5f);
+        yield return new WaitForSeconds(3f);
 
             if (availableSpawnPoints.Count > 0)
             {
