@@ -86,10 +86,12 @@ public class LobbyUI : MonoBehaviour
             SwitchPanel(CreateLobbyPanel);
 
             PopulateDropDownWithEnum(globalGameModeDropdown, globalGameMode);
+            globalGameMode = GlobalGameMode.PVE;
 
             globalGameModeDropdown.onValueChanged.AddListener(delegate { GlobalDropdownValueChanged(globalGameModeDropdown); });
 
             PopulateDropDownWithEnum(pvpGameModeDropdown, pvpGameMode);
+            pvpGameMode = PvPGameMode.CONTROL;
 
             pvpGameModeDropdown.onValueChanged.AddListener(delegate { PvPDropdownValueChanged(pvpGameModeDropdown); });
 
@@ -182,10 +184,10 @@ public class LobbyUI : MonoBehaviour
         l.GetComponent<LobbyDisplay>().SetDisplay(lobby.Name, lobby.MaxPlayers, lobby.MaxPlayers - lobby.AvailableSlots, lobby.Data["GlobalGameMode"].Value, lobby.Data["PvPGameMode"].Value, lobby);
     }
 
-    public void InstanciatePlayerDisplay(Player player)
+    public void InstanciatePlayerDisplay(Player player, bool showTeam)
     {
         GameObject p = Instantiate(playerDisplayPrefab, playerListContainer);
-        p.GetComponent<PlayerDisplay>().SetDisplay(player.Data["PlayerName"].Value);
+        p.GetComponent<PlayerDisplay>().SetDisplay(player.Data["PlayerName"].Value, showTeam, player.Data["PlayerTeam"].Value);
     }
 
     public void CreateLobby()

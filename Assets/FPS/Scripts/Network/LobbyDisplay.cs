@@ -36,6 +36,6 @@ public class LobbyDisplay : MonoBehaviour
 		lobbyUI.currentLobbyName.text = lobbyName.text;
 		lobbyUI.currentLobbyPlayers.text = lobbyPlayers.text;
 		lobbyUI.currentLobbyGameMode.text = lobbyGameMode.text;
-		lobbyManager.JoinLobby(selectedLobby.Id);
+		lobbyManager.JoinLobby(selectedLobby);
 	}
 }

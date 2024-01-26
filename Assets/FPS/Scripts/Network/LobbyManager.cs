@@ -21,6 +21,7 @@ public class LobbyManager : MonoBehaviour
     private float heartbeatTimer;
     private float lobbyUpdateTimer;
     private string playerName;
+    private string playerTeam;
 
     public GameObject gameManagerPrefab;
     private GameObject gameManagerInstance;
@@ -200,13 +201,15 @@ public class LobbyManager : MonoBehaviour
 
 			Debug.Log("Created Lobby! " + lobby.Name + " " + lobby.MaxPlayers + " " + lobby.Id + " " + lobby.LobbyCode);
 
+            playerTeam = "0";
+
             lobbyUI.currentLobbyPlayers.text = lobby.MaxPlayers - lobby.AvailableSlots + "/" + lobby.MaxPlayers;
             lobbyUI.SetAsHost();
             PrintPlayers(hostLobby);
         }
         catch (LobbyServiceException e)
 		{
-            Debug.Log(e);	
+            Debug.Log(e);
         }
 	}
 
@@ -265,15 +268,21 @@ public class LobbyManager : MonoBehaviour
         }
 	}
 
-    public async void JoinLobby(string lobbyId)
+    public async void JoinLobby(Lobby selectedLobby)
     {
         try
         {
+            if(selectedLobby.Data["GlobalGameMode"].Value == "pvp"
+                && (selectedLobby.Data["PvPGameMode"].Value == "control" || selectedLobby.Data["PvPGameMode"].Value == "mme"))
+            {
+                playerTeam = ((selectedLobby.MaxPlayers - selectedLobby.AvailableSlots) % 2).ToString();
+            }
+
             JoinLobbyByIdOptions joinLobbyByIdOptions = new JoinLobbyByIdOptions
             {
-                Player = GetPlayer()
+                Player = GetPlayer(playerTeam)
             };
-            Lobby lobby = await Lobbies.Instance.JoinLobbyByIdAsync(lobbyId, joinLobbyByIdOptions);
+            Lobby lobby = await Lobbies.Instance.JoinLobbyByIdAsync(selectedLobby.Id, joinLobbyByIdOptions);
             joinedLobby = lobby;
 
             //Debug.Log("Joined Lobby with code " + lobbyCode);
@@ -298,13 +307,15 @@ public class LobbyManager : MonoBehaviour
         }
     }
 
-    private Player GetPlayer()
+    private Player GetPlayer(string team = "0")
 	{
         return new Player
         {
             Data = new Dictionary<string, PlayerDataObject>
                     {
-                        {"PlayerName", new PlayerDataObject(PlayerDataObject.VisibilityOptions.Member, playerName) }
+                        {"PlayerName", new PlayerDataObject(PlayerDataObject.VisibilityOptions.Member, playerName) },
+                        {"PlayerTeam", new PlayerDataObject(PlayerDataObject.VisibilityOptions.Member, team) },
+
                     }
         };
     }
@@ -318,10 +329,33 @@ public class LobbyManager : MonoBehaviour
         lobbyUI.ClearPlayerDisplay();
         Debug.Log("Players in Lobby " + lobby.Name + " " + lobby.Data["PvPGameMode"].Value/* + " " + lobby.Data["Map"].Value*/);
         lobbyUI.currentLobbyPlayers.text = lobby.MaxPlayers - lobby.AvailableSlots + "/" + lobby.MaxPlayers;
-		foreach (Player player in lobby.Players)
+
+        bool showTeam = false;
+        if (lobby.Data["GlobalGameMode"].Value == "pvp"
+            && (lobby.Data["PvPGameMode"].Value == "control" || lobby.Data["PvPGameMode"].Value == "mme"))
+        {
+            showTeam = true;
+        }
+
+        List<Player> playerA = new List<Player>();
+        List<Player> playerB = new List<Player>();
+
+        foreach (Player player in lobby.Players)
 		{
+            if (player.Data["PlayerTeam"].Value == "0")
+                playerA.Add(player);
+            else
+                playerB.Add(player);
+        }
+        foreach (Player player in playerA)
+        {
             Debug.Log(player.Id + " " + player.Data["PlayerName"].Value);
-            lobbyUI.InstanciatePlayerDisplay(player);
+            lobbyUI.InstanciatePlayerDisplay(player, showTeam);
+        }
+        foreach (Player player in playerB)
+        {
+            Debug.Log(player.Id + " " + player.Data["PlayerName"].Value);
+            lobbyUI.InstanciatePlayerDisplay(player, showTeam);
         }
     }
 
