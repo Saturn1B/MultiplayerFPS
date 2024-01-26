@@ -14,6 +14,8 @@ public class BossManager : NetworkBehaviour
     private int gateOpenC = 2;
     private int gateOpenD = 3;
     private float startHeal;
+
+    public HealthComponent bossHealt;
                                 //av laser
     private bool stepA = false; // bumbaaa
     private bool stepB = false; // les 2 
@@ -24,6 +26,8 @@ public class BossManager : NetworkBehaviour
     public TowerBoss[] towers;
 
     public GameObject shield;
+
+    private bool bossDeath;
  
     private void Start()
     {
@@ -35,6 +39,12 @@ public class BossManager : NetworkBehaviour
     public void Update()
     {
         if (!IsServer) return;
+
+        if (bossHealt.currentHealth.Value <= 0 && bossDeath == false)
+        {
+            bossDeath = true;
+            End();
+        }
 
         if (towers[gateOpenA].isDestroyed && stepA == false)
         {
@@ -124,11 +134,26 @@ public class BossManager : NetworkBehaviour
     {
         shield.SetActive(false);
 
-        yield return new WaitForSeconds(30f);
+        
+
+        yield return new WaitForSeconds(50f);
 
         shield.SetActive(true);
 
-        SapwnTower();
+        if (stepC)
+        {
+            Debug.Log("Finito plus de shild");
+        }
+        else
+        {
+            SapwnTower();
+        }
+        
+    }
+
+    public void End()
+    {
+        // Le boss est mort 
     }
 
     

@@ -36517,6 +36517,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4886019929254248918, guid: e9517c0d8ef5dde4d8c2f9919b81bf83,
         type: 3}
+      propertyPath: bossHealt
+      value: 
+      objectReference: {fileID: 7908063194248838223}
+    - target: {fileID: 4886019929254248918, guid: e9517c0d8ef5dde4d8c2f9919b81bf83,
+        type: 3}
       propertyPath: gates.Array.data[0]
       value: 
       objectReference: {fileID: 1466758161456139812}
@@ -36635,3 +36640,15 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: e9517c0d8ef5dde4d8c2f9919b81bf83, type: 3}
+--- !u!114 &7908063194248838223 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 8950593988492007921, guid: e9517c0d8ef5dde4d8c2f9919b81bf83,
+    type: 3}
+  m_PrefabInstance: {fileID: 7908063194248838222}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ec04e5132acbc7e43860175b896603a6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
