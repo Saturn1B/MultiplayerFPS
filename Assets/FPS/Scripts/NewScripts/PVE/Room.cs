@@ -19,6 +19,8 @@ public class Room : NetworkBehaviour
 	[SerializeField] private Door door;
 	[SerializeField] private Teleporter teleporter;
 
+	[SerializeField] private Room nextRoom;
+
 	private int playerOnRoom;
 	private GameManager gameManager;
 	private bool isDoorOpened;
@@ -33,7 +35,7 @@ public class Room : NetworkBehaviour
 		}
 
 		if(roomType == RoomType.STARTING)
-			gameManager.allPlayersLoaded.AddListener(OpenDoor);
+			gameManager.allPlayersLoaded.AddListener(OpenDoorServerRpc);
 	}
 
 	[ServerRpc(RequireOwnership = false)]
@@ -57,7 +59,7 @@ public class Room : NetworkBehaviour
 			switch (roomType)
 			{
 				case RoomType.NORMAL:
-					OpenDoor();
+					OpenDoorServerRpc();
 					break;
 				case RoomType.PORTAL:
 					ActivatePortal();
@@ -71,11 +73,13 @@ public class Room : NetworkBehaviour
 		}
 	}
 
-	private void OpenDoor()
+	[ServerRpc]
+	private void OpenDoorServerRpc()
 	{
 		Debug.Log("Open Door");
 		isDoorOpened = true;
 		door.OpenDoor();
+		nextRoom.StartRoomEnemy();
 	}
 
 	private void ActivatePortal()
@@ -84,17 +88,28 @@ public class Room : NetworkBehaviour
 		teleporter.ActivateTeleporter();
 	}
 
-	private void OnTriggerEnter(Collider other)
-	{
-		if (!IsHost) return;
+	//private void OnTriggerEnter(Collider other)
+	//{
+	//	if (!IsHost) return;
 
-		if (other.transform.GetComponent<PlayerNetworkHandler>() && roomType == RoomType.STARTING && !isDoorOpened)
-		{
-			playerOnRoom++;
-			if(playerOnRoom >= gameManager.maxPlayers.Value)
-			{
-				OpenDoor();
+	//	if (other.transform.GetComponent<PlayerNetworkHandler>() && roomType == RoomType.STARTING && !isDoorOpened)
+	//	{
+	//		playerOnRoom++;
+	//		if(playerOnRoom >= gameManager.maxPlayers.Value)
+	//		{
+	//			OpenDoorServerRpc();
+	//		}
+	//	}
+	//}
+
+	public void StartRoomEnemy()
+    {
+		if(roomEnemys.Count > 0)
+        {
+            foreach (var enemy in roomEnemys)
+            {
+				//start enemy
 			}
 		}
-	}
+    }
 }
