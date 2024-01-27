@@ -12,7 +12,7 @@ using Unity.Netcode.Transports.UTP;
 using Unity.Networking.Transport.Relay;
 using System.Threading.Tasks;
 
-public class LobbyManager : MonoBehaviour
+public class LobbyManager : NetworkBehaviour
 {
     [SerializeField] private LobbyUI lobbyUI;
 
@@ -21,7 +21,7 @@ public class LobbyManager : MonoBehaviour
     private float heartbeatTimer;
     private float lobbyUpdateTimer;
     private string playerName;
-    private string playerTeam;
+    [HideInInspector] public string playerTeam;
 
     public GameObject gameManagerPrefab;
     private GameObject gameManagerInstance;
@@ -104,7 +104,7 @@ public class LobbyManager : MonoBehaviour
             joinedLobby = lobby;
             lobbyUI.JoinedLobbyPanel.SetActive(false);
 
-			if (IsLobbyHost())
+			if (IsLobbyHost() && IsHost)
 			{
                 gameManagerInstance = Instantiate(gameManagerPrefab);
                 NetworkObject networkObject = gameManagerInstance.GetComponent<NetworkObject>();

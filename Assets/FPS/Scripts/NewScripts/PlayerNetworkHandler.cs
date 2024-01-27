@@ -16,6 +16,8 @@ public class PlayerNetworkHandler : NetworkBehaviour
 	[SerializeField] private GameObject downDetector;
 	[HideInInspector] public NetworkVariable<bool> isDown = new NetworkVariable<bool>(false, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner);
 
+	private NetworkVariable<int> playerTeam = new NetworkVariable<int>(0, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner);
+
 	public override void OnNetworkSpawn()
 	{
 		StartCoroutine(WaitForGM());
@@ -28,6 +30,27 @@ public class PlayerNetworkHandler : NetworkBehaviour
 		gameOverHandler = GetComponentInChildren<GameOverHandler>();
 
 		Debug.Log("CONNECT PLAYER FIRST TIME");
+
+		playerTeam.OnValueChanged += ((int old, int current) =>
+		{
+			switch (gameManager._currentGameMode.Value)
+			{
+				case 0:
+					gameObject.tag = "Ally";
+					break;
+				case 1:
+					gameObject.tag = current == 0 ? "TeamA" : "TeamB";
+					break;
+				case 2:
+					break;
+				case 3:
+					gameObject.tag = current == 0 ? "TeamA" : "TeamB";
+					break;
+				default:
+					gameObject.tag = "Ally";
+					break;
+			}
+		});
 
 		if (IsOwner)
             ChooseSpawn();
@@ -57,16 +80,25 @@ public class PlayerNetworkHandler : NetworkBehaviour
 			gameManager.ConnectPlayerServerRpc();
 		});
 
+        if (IsOwner)
+        {
+			LobbyManager lobbyManager = FindObjectOfType<LobbyManager>();
+
+			playerTeam.Value = lobbyManager.playerTeam == "0" ? 0 : 1;
+        }
+
 		switch (gameManager._currentGameMode.Value)
 		{
 			case 0:
 				gameObject.tag = "Ally";
 				break;
 			case 1:
+				gameObject.tag = playerTeam.Value == 0 ? "TeamA" : "TeamB";
 				break;
 			case 2:
 				break;
 			case 3:
+				gameObject.tag = playerTeam.Value == 0 ? "TeamA" : "TeamB";
 				break;
 			default:
 				gameObject.tag = "Ally";

@@ -6242,6 +6242,7 @@ GameObject:
   - component: {fileID: 1503110806}
   - component: {fileID: 1503110805}
   - component: {fileID: 1503110807}
+  - component: {fileID: 1503110808}
   m_Layer: 0
   m_Name: LobbyManager
   m_TagString: Untagged
@@ -6262,6 +6263,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   lobbyUI: {fileID: 1503110807}
+  playerTeam: 
   gameManagerPrefab: {fileID: 2805463072884934407, guid: 1804344d2ca454a4fad5de00ee052019,
     type: 3}
 --- !u!4 &1503110806
@@ -6316,6 +6318,26 @@ MonoBehaviour:
   quitButton: {fileID: 2069504715}
   startButtonObj: {fileID: 670633778}
   startButton: {fileID: 670633780}
+--- !u!114 &1503110808
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1503110804}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d5a57f767e5e46a458fc5d3c628d0cbb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  GlobalObjectIdHash: 152673548
+  AlwaysReplicateAsRoot: 0
+  SynchronizeTransform: 1
+  ActiveSceneSynchronization: 0
+  SceneMigrationSynchronization: 1
+  SpawnWithObservers: 1
+  DontDestroyWithOwner: 0
+  AutoObjectParentSync: 1
 --- !u!1 &1523851991
 GameObject:
   m_ObjectHideFlags: 0
@@ -8757,7 +8779,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 1}
   m_AnchorMax: {x: 0.5, y: 1}
-  m_AnchoredPosition: {x: 0, y: -233}
+  m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 600, y: 75}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &2057966364
@@ -8945,7 +8967,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0}
   m_AnchorMax: {x: 0.5, y: 0}
-  m_AnchoredPosition: {x: 0, y: 255}
+  m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 600, y: 75}
   m_Pivot: {x: 0.5, y: 0}
 --- !u!114 &2062382742
