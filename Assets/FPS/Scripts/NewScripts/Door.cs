@@ -9,6 +9,7 @@ public class Door : NetworkBehaviour
 
 	public void OpenDoor()
 	{
-		gate.SetActive(false);
+		//gate.SetActive(false);
+		gate.GetComponent<NetworkObject>().Despawn();
 	}
 }
