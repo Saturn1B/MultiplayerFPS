@@ -11,6 +11,9 @@ public class TowerBoss : NetworkBehaviour
     private bool attack = false;
 
     public PlayerNetworkHandler[] players;
+
+    private List<PlayerNetworkHandler> playerIsNotDead;
+
     private int maTarget;
 
     public GameObject towerA;
@@ -58,7 +61,7 @@ public class TowerBoss : NetworkBehaviour
     private void TargetPlayer(int num)
     {
         // Calculer la direction vers le joueur
-        Vector3 directionToPlayer = players[num].transform.position + Vector3.up - weaponA.position;
+        Vector3 directionToPlayer = playerIsNotDead[num].transform.position + Vector3.up - weaponA.position;
 
         // Calculer la rotation pour faire face à la direction du joueur en douceur
         Quaternion targetRotation = Quaternion.LookRotation(directionToPlayer);
@@ -97,7 +100,18 @@ public class TowerBoss : NetworkBehaviour
     {
         yield return new WaitForSeconds(Random.Range(8, 20));
 
-        maTarget = Random.Range(0, players.Length);
+        //maTarget = Random.Range(0, players.Length);
+        playerIsNotDead.Clear();
+
+        for (int i = 0; i < players.Length; i++)
+        {
+            if (players[i].isDown.Value)
+            {
+                playerIsNotDead.Add(players[i]);
+
+                maTarget = Random.Range(0, players.Length);
+            }
+        }
 
         Debug.Log("Boss change de target" + maTarget);
 
@@ -129,7 +143,17 @@ public class TowerBoss : NetworkBehaviour
 
         players = FindObjectsOfType<PlayerNetworkHandler>();
 
-        maTarget = Random.Range(0, players.Length);
+        playerIsNotDead.Clear();
+
+        for (int i = 0; i < players.Length; i++)
+        {
+            if (players[i].isDown.Value)
+            {
+                playerIsNotDead.Add(players[i]);
+
+                maTarget = Random.Range(0, players.Length);
+            }
+        }
     }
 
 

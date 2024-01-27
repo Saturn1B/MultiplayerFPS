@@ -9,6 +9,8 @@ using static UnityEngine.GraphicsBuffer;
 public class EnnemiAi : NetworkBehaviour
 {
     public bool shooter;
+    
+    public bool active;
 
     public float raycastDistance = 10f;
     public float chaseSpeed = 5f;
@@ -38,7 +40,7 @@ public class EnnemiAi : NetworkBehaviour
         if (!IsServer) return;
         //Debug.Log("trigg rien");
 
-        if (other.transform.GetComponent<PlayerNetworkHandler>())
+        if (other.transform.GetComponent<PlayerNetworkHandler>() && active)
         {
             targets = other.transform;
 
