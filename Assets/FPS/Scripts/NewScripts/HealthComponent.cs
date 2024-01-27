@@ -43,11 +43,13 @@ public class HealthComponent : NetworkBehaviour
 
         Debug.Log("Inflicted " + amount + " of damages");
 
-        if (amount  <= currentHealth.Value)
-		{
+        if (amount <= currentHealth.Value)
+        {
             currentHealth.Value -= amount;
-		}
-	}
+        }
+        else
+            currentHealth.Value = 0;
+    }
 
     private void HandleDeath()
 	{

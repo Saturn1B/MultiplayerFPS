@@ -24,17 +24,17 @@ public class ExplosionOnTrigger : NetworkBehaviour
 
     void Explode(HealthComponent player)
     {
-        Collider[] colliders = Physics.OverlapSphere(transform.position, explosionRadius);
+        //Collider[] colliders = Physics.OverlapSphere(transform.position, explosionRadius);
 
-        foreach (Collider hit in colliders)
-        {
-            Rigidbody rb = hit.GetComponent<Rigidbody>();
+        //foreach (Collider hit in colliders)
+        //{
+        //    Rigidbody rb = hit.GetComponent<Rigidbody>();
 
-            if (rb != null)
-            {
-                rb.AddExplosionForce(explosionForce, transform.position, explosionRadius, upwardsModifier);
-            }
-        }
+        //    if (rb != null)
+        //    {
+        //        rb.AddExplosionForce(explosionForce, transform.position, explosionRadius, upwardsModifier);
+        //    }
+        //}
 
         // Ajoutez ici le code pour les effets visuels ou sonores de l'explosion, si nécessaire.
 

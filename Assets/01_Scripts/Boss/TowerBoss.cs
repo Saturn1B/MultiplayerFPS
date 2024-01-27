@@ -105,7 +105,7 @@ public class TowerBoss : NetworkBehaviour
 
         for (int i = 0; i < players.Length; i++)
         {
-            if (players[i].isDown.Value)
+            if (!players[i].isDown.Value)
             {
                 playerIsNotDead.Add(players[i]);
 
@@ -147,7 +147,7 @@ public class TowerBoss : NetworkBehaviour
 
         for (int i = 0; i < players.Length; i++)
         {
-            if (players[i].isDown.Value)
+            if (!players[i].isDown.Value)
             {
                 playerIsNotDead.Add(players[i]);
 
