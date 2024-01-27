@@ -18,8 +18,9 @@ public class BossManager : NetworkBehaviour
     public HealthComponent bossHealt;
                                 //av laser
     private bool stepA = false; // bumbaaa
-    private bool stepB = false; // les 2 
-    private bool stepC = false; 
+    private bool stepB = false; // les 2
+    private bool stepC = false;
+    private bool setpD = false;
 
     private GameManager gameManager;
 
@@ -28,7 +29,7 @@ public class BossManager : NetworkBehaviour
     public GameObject shield;
 
     private bool bossDeath;
- 
+
     private void Start()
     {
         gameManager = FindAnyObjectByType<GameManager>();
@@ -48,13 +49,13 @@ public class BossManager : NetworkBehaviour
 
         if (towers[gateOpenA].isDestroyed && stepA == false)
         {
-            stepA = true;  
+            stepA = true;
             StartCoroutine(DespawnBossShield());
             gates[gateOpenA].GoClose();
         }
         if (towers[gateOpenA].isDestroyed && towers[gateOpenB].isDestroyed && stepB == false)
         {
-            stepB = true; 
+            stepB = true;
             StartCoroutine(DespawnBossShield());
             gates[gateOpenA].GoClose(); gates[gateOpenB].GoClose();
         }
@@ -113,13 +114,14 @@ public class BossManager : NetworkBehaviour
                 towers[i].fx.SetActive(true);
                 towers[i].isDestroyed = false;
             }
+            setpD = true;
             return;
         }
-        
-        
+
+
     }
 
-    private IEnumerator WhatForStartBoss()// attend que les joueur charge 
+    private IEnumerator WhatForStartBoss()// attend que les joueur charge
     {
         while (!gameManager.canPlayerMove.Value)
         {
@@ -134,27 +136,26 @@ public class BossManager : NetworkBehaviour
     {
         shield.SetActive(false);
 
-        
 
-        yield return new WaitForSeconds(50f);
 
-        shield.SetActive(true);
+        yield return new WaitForSeconds(5f);
 
-        if (stepC)
+        if (setpD)
         {
             Debug.Log("Finito plus de shild");
         }
         else
         {
+            shield.SetActive(true);
             SapwnTower();
         }
-        
+
     }
 
     public void End()
     {
-        // Le boss est mort 
+        // Le boss est mort
     }
 
-    
+
 }
