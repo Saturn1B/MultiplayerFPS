@@ -7421,6 +7421,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: SpawnPoint (4)
       objectReference: {fileID: 0}
+    - target: {fileID: 9085989092622409618, guid: d470ec7dd3a7d3e4a8ba2a87d7d9dc7c,
+        type: 3}
+      propertyPath: m_TagString
+      value: Ally
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -8109,6 +8114,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: SpawnPoint (1)
+      objectReference: {fileID: 0}
+    - target: {fileID: 9085989092622409618, guid: d470ec7dd3a7d3e4a8ba2a87d7d9dc7c,
+        type: 3}
+      propertyPath: m_TagString
+      value: Ally
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -9327,6 +9337,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: SpawnPoint
+      objectReference: {fileID: 0}
+    - target: {fileID: 9085989092622409618, guid: d470ec7dd3a7d3e4a8ba2a87d7d9dc7c,
+        type: 3}
+      propertyPath: m_TagString
+      value: Ally
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -11516,6 +11531,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: SpawnPoint (2)
       objectReference: {fileID: 0}
+    - target: {fileID: 9085989092622409618, guid: d470ec7dd3a7d3e4a8ba2a87d7d9dc7c,
+        type: 3}
+      propertyPath: m_TagString
+      value: Ally
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -11652,6 +11672,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: SpawnPoint (3)
+      objectReference: {fileID: 0}
+    - target: {fileID: 9085989092622409618, guid: d470ec7dd3a7d3e4a8ba2a87d7d9dc7c,
+        type: 3}
+      propertyPath: m_TagString
+      value: Ally
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

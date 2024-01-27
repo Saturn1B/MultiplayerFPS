@@ -2885,6 +2885,7 @@ GameObject:
   - component: {fileID: 853103901908670449}
   - component: {fileID: 7920569971291978729}
   - component: {fileID: 36680164094119703}
+  - component: {fileID: 8590964256310510423}
   m_Layer: 0
   m_Name: PlayerTest
   m_TagString: Untagged
@@ -3070,4 +3071,18 @@ MonoBehaviour:
   gameManager: {fileID: 0}
   downDetector: {fileID: 5615136593362280892}
   isDown:
+    m_InternalValue: 0
+--- !u!114 &8590964256310510423
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8820508574499075022}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4625d7904115f074ab809bfa820624dc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  playerScore:
     m_InternalValue: 0

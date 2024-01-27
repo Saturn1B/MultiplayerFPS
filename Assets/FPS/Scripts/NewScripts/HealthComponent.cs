@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using Unity.Netcode;
+using UnityEngine.Events;
 
 public class HealthComponent : NetworkBehaviour
 {
@@ -16,6 +17,8 @@ public class HealthComponent : NetworkBehaviour
 
     private GameManager gameManager;
 
+    private int currentEnemyId;
+
     public override void OnNetworkSpawn()
     {
         if (!IsOwner) return;
@@ -26,7 +29,7 @@ public class HealthComponent : NetworkBehaviour
         {
             Debug.Log(newValue);
 
-            if (newValue <= 0)
+            if (newValue <= 0 && newValue != previousValue)
             {
                 HandleDeath();
             }
@@ -50,6 +53,25 @@ public class HealthComponent : NetworkBehaviour
         else
             currentHealth.Value = 0;
     }
+    [ClientRpc]
+    public void TakeDamageClientRpc(float amount, int enemyId)
+    {
+        if (isInvicible) return;
+        Debug.Log("damage isn't ownwer");
+        if (!IsOwner) return;
+        Debug.Log("damage is ownwer");
+
+        currentEnemyId = enemyId;
+
+        Debug.Log("Inflicted " + amount + " of damages");
+
+        if (amount <= currentHealth.Value)
+        {
+            currentHealth.Value -= amount;
+        }
+        else
+            currentHealth.Value = 0;
+    }
 
     private void HandleDeath()
 	{
@@ -62,6 +84,19 @@ public class HealthComponent : NetworkBehaviour
 			{
                 GetComponent<PlayerNetworkHandler>().PlayerDown();
 			}
+            else if (gameManager._currentGameMode.Value == 2)
+            {
+                PlayerNetworkHandler[] players = FindObjectsOfType<PlayerNetworkHandler>();
+
+                foreach (PlayerNetworkHandler player in players)
+                {
+                    if (int.Parse(player.OwnerClientId.ToString()) == currentEnemyId)
+                        player.transform.GetComponent<DeathMatchScore>().ScoreServerRpc();
+                }
+
+                GetComponent<PlayerNetworkHandler>().ChooseSpawn();
+                StartCoroutine(DeathmatchRespawn());
+            }
 			else
 			{
                 GetComponent<PlayerNetworkHandler>().ChooseSpawn();
@@ -91,13 +126,24 @@ public class HealthComponent : NetworkBehaviour
         isInvicible = false;
 	}
 
-	//private void OnDestroy()
-	//{
- //       if(OnDeath != null)
- //           OnDeath.Invoke();
- //   }
+    private IEnumerator DeathmatchRespawn()
+    {
+        isInvicible = true;
+        GetComponent<PlayerNetworkHandler>().PlayerDown();
+        //hide player and tp him to the player who killed him
+        yield return new WaitForSeconds(5f);
+        currentHealth.Value = maxHealth;
+        isInvicible = false;
+        GetComponent<PlayerNetworkHandler>().PlayerUpServerRpc();
+    }
 
-	public override void OnNetworkDespawn()
+    //private void OnDestroy()
+    //{
+    //       if(OnDeath != null)
+    //           OnDeath.Invoke();
+    //   }
+
+    public override void OnNetworkDespawn()
 	{
         if (OnDeath != null)
             OnDeath.Invoke();

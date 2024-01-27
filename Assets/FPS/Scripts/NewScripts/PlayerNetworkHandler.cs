@@ -146,7 +146,15 @@ public class PlayerNetworkHandler : NetworkBehaviour
 		{
 			if (!spawn.istaken.Value)
 			{
-				choosenSpawn = spawn;
+				if(gameManager._currentGameMode.Value != 2)
+                {
+                    if (spawn.gameObject.CompareTag(gameObject.tag))
+                    {
+						choosenSpawn = spawn;
+					}
+				}
+				else
+					choosenSpawn = spawn;
 			}
 		}
 		if (choosenSpawn != null)
@@ -197,6 +205,7 @@ public class PlayerNetworkHandler : NetworkBehaviour
 		Debug.Log("detect: " + other.gameObject.name);
 
 		if (other.transform.parent && other.transform.parent.gameObject == this.gameObject) return;
+		if (gameManager._currentGameMode.Value != 0) return;
 
 		if (other.isTrigger && other.transform.GetComponentInParent<PlayerNetworkHandler>() && other.transform.GetComponentInParent<PlayerNetworkHandler>().isDown.Value)
 		{

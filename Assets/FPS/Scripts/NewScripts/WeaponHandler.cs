@@ -34,8 +34,12 @@ public class WeaponHandler : NetworkBehaviour
 
     [HideInInspector] public bool canUseWeapon = true;
 
+    private PlayerNetworkHandler playerNetworkHandler;
+
     public override void OnNetworkSpawn()
     {
+        playerNetworkHandler = GetComponent<PlayerNetworkHandler>();
+
         if (!IsOwner) return;
 
         cam = GetComponentInChildren<Camera>();
@@ -175,17 +179,21 @@ public class WeaponHandler : NetworkBehaviour
 	{
         Debug.Log("hit: " + OwnerClientId);
 
-        if (hit.transform.gameObject.CompareTag(gameObject.tag)) return;
+        if (hit.transform.gameObject.CompareTag(gameObject.tag) && !hit.transform.gameObject.CompareTag("Untagged")) return;
 
         if (hit.transform.GetComponent<HealthComponent>())
 		{
             Debug.Log("HIT ENNEMY");
-            hit.transform.GetComponent<HealthComponent>().TakeDamageClientRpc(currentWeapon.bulletDamage);
+            HealthComponent enemyHealthComponent = hit.transform.GetComponent<HealthComponent>();
+
+            enemyHealthComponent.TakeDamageClientRpc(currentWeapon.bulletDamage, int.Parse(playerNetworkHandler.OwnerClientId.ToString()));
         }
         else if (hit.transform.GetComponentInParent<HealthComponent>())
 		{
             Debug.Log("HIT ENNEMY CHILD");
-            hit.transform.GetComponentInParent<HealthComponent>().TakeDamageClientRpc(currentWeapon.bulletDamage);
+            HealthComponent enemyHealthComponent = hit.transform.GetComponentInParent<HealthComponent>();
+
+            enemyHealthComponent.TakeDamageClientRpc(currentWeapon.bulletDamage, int.Parse(playerNetworkHandler.OwnerClientId.ToString()));
         }
     }
 
