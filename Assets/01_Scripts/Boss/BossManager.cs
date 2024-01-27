@@ -15,6 +15,9 @@ public class BossManager : NetworkBehaviour
     private int gateOpenD = 3;
     private float startHeal;
 
+    public Vector3 startPose;
+    public Vector3 noShieldPose;
+
     public HealthComponent bossHealt;
                                 //av laser
     private bool stepA = false; // bumbaaa
@@ -64,6 +67,10 @@ public class BossManager : NetworkBehaviour
             stepC = true;
             StartCoroutine(DespawnBossShield());
             gates[gateOpenA].GoClose(); gates[gateOpenB].GoClose(); gates[gateOpenC].GoClose();
+        }
+        if (towers[gateOpenA].isDestroyed && towers[gateOpenB].isDestroyed && towers[gateOpenC].isDestroyed && towers[gateOpenD].isDestroyed && setpD)
+        {
+            StartCoroutine(DespawnBossShield());
         }
 
     }
@@ -134,8 +141,8 @@ public class BossManager : NetworkBehaviour
 
     private IEnumerator DespawnBossShield()// fait despawn de shield du boss apres qu'un tower soit destroy
     {
-        shield.SetActive(false);
-
+        //shield.SetActive(false);
+        shield.transform.localPosition = noShieldPose;
 
 
         yield return new WaitForSeconds(5f);
@@ -143,10 +150,12 @@ public class BossManager : NetworkBehaviour
         if (setpD)
         {
             Debug.Log("Finito plus de shild");
+            
         }
         else
         {
-            shield.SetActive(true);
+            //shield.SetActive(true);
+            shield.transform.localPosition = startPose;
             SapwnTower();
         }
 
