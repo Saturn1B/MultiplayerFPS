@@ -8,7 +8,10 @@ public class Teleporter : NetworkBehaviour
 	private GameManager gameManager;
 
 	[SerializeField] private string newSceneName;
-	[SerializeField] private GameObject teleporterObject;
+
+	[SerializeField] private GameObject effectPrefab;
+
+	public NetworkVariable<bool> isActive = new NetworkVariable<bool>(false, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Server);
 
 	private void Start()
 	{
@@ -17,14 +20,16 @@ public class Teleporter : NetworkBehaviour
 
 	public void ActivateTeleporter()
 	{
-		teleporterObject.SetActive(true);
+		isActive.Value = true;
+		GameObject e = Instantiate(effectPrefab, transform);
+		e.GetComponent<NetworkObject>().Spawn();
 	}
 
 	private void OnTriggerEnter(Collider other)
 	{
 		if (!IsServer) return;
 
-		if (other.transform.GetComponent<PlayerNetworkHandler>())
+		if (other.transform.GetComponent<PlayerNetworkHandler>() && isActive.Value)
 		{
 			gameManager.ChangeScene(newSceneName);
 		}

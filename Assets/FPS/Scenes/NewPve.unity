@@ -8662,8 +8662,13 @@ PrefabInstance:
     - target: {fileID: 7024454976879960391, guid: 3d7c503bdb3eb5049971fea21f91dea9,
         type: 3}
       propertyPath: roomType
-      value: 1
+      value: 2
       objectReference: {fileID: 0}
+    - target: {fileID: 7024454976879960391, guid: 3d7c503bdb3eb5049971fea21f91dea9,
+        type: 3}
+      propertyPath: teleporter
+      value: 
+      objectReference: {fileID: 33269005514802309}
     - target: {fileID: 7024454976879960391, guid: 3d7c503bdb3eb5049971fea21f91dea9,
         type: 3}
       propertyPath: roomEnemys.Array.size
@@ -25892,6 +25897,9 @@ GameObject:
   - component: {fileID: 4788731551133737}
   - component: {fileID: 33269005514802307}
   - component: {fileID: 23259726617908021}
+  - component: {fileID: 33269005514802309}
+  - component: {fileID: 33269005514802308}
+  - component: {fileID: 33269005514802310}
   m_Layer: 0
   m_Name: Tp
   m_TagString: Untagged
@@ -25965,6 +25973,64 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1868077410699629}
   m_Mesh: {fileID: 4300000, guid: 81952299d90432a48889398dd6954dc5, type: 3}
+--- !u!114 &33269005514802308
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1868077410699629}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d5a57f767e5e46a458fc5d3c628d0cbb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  GlobalObjectIdHash: 3974881267
+  AlwaysReplicateAsRoot: 0
+  SynchronizeTransform: 1
+  ActiveSceneSynchronization: 0
+  SceneMigrationSynchronization: 1
+  SpawnWithObservers: 1
+  DontDestroyWithOwner: 0
+  AutoObjectParentSync: 1
+--- !u!114 &33269005514802309
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1868077410699629}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cf3e6584baff87c4bb589af9aeb1a33c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  newSceneName: BossMap
+  effectPrefab: {fileID: 3175861685628979070, guid: 234d19a6fb0d9f44fbee3a4693011752,
+    type: 3}
+  isActive:
+    m_InternalValue: 0
+--- !u!65 &33269005514802310
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1868077410699629}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 1
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 4, y: 5, z: 4}
+  m_Center: {x: 0.0000010728834, y: 3, z: 0}
 --- !u!4 &1721785176074667196
 Transform:
   m_ObjectHideFlags: 0

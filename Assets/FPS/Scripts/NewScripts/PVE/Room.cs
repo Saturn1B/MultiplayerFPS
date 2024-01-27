@@ -62,7 +62,7 @@ public class Room : NetworkBehaviour
 					OpenDoorServerRpc();
 					break;
 				case RoomType.PORTAL:
-					ActivatePortal();
+					ActivatePortalServerRpc();
 					break;
 				case RoomType.BOSS:
 					//END GAME
@@ -82,7 +82,8 @@ public class Room : NetworkBehaviour
 		nextRoom.StartRoomEnemyServerRpc();
 	}
 
-	private void ActivatePortal()
+	[ServerRpc]
+	private void ActivatePortalServerRpc()
 	{
 		Debug.Log("Activate Portal");
 		teleporter.ActivateTeleporter();

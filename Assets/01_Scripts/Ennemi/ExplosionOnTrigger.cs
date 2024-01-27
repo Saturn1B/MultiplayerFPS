@@ -14,6 +14,8 @@ public class ExplosionOnTrigger : NetworkBehaviour
 
     void OnTriggerEnter(Collider other)
     {
+        if (!IsServer) return;
+
         if (other.transform.GetComponent<PlayerNetworkHandler>())
         {
             Explode(other.GetComponent<HealthComponent>()); Debug.Log("ouiiii");
