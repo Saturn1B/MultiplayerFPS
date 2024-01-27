@@ -12,7 +12,7 @@ public class TowerBoss : NetworkBehaviour
 
     public PlayerNetworkHandler[] players;
 
-    private List<PlayerNetworkHandler> playerIsNotDead;
+    private List<PlayerNetworkHandler> playerIsNotDead = new List<PlayerNetworkHandler>();
 
     private int maTarget;
 
@@ -27,7 +27,7 @@ public class TowerBoss : NetworkBehaviour
 
     public bool isDestroyed = false;
     public GameObject fx;
-    
+
     private void Start()
     {
         healthComponent = gameObject.GetComponent<HealthComponent>();
@@ -44,7 +44,7 @@ public class TowerBoss : NetworkBehaviour
     public void Update()
     {
         if (!IsServer) return;
-      
+
         if (gameManager.canPlayerMove.Value && modAttack)
         {
             TargetPlayer(maTarget);
