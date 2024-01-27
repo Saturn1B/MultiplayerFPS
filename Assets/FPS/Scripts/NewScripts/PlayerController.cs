@@ -68,7 +68,7 @@ public class PlayerController : NetworkBehaviour
             playerController.Move(velocity * Time.deltaTime);
 
             return;
-        } 
+        }
 
         HandleMovement();
         HandleCrouch();
@@ -171,6 +171,7 @@ public class PlayerController : NetworkBehaviour
 	{
         canMove = false;
         playerController.height = 0.5f;
+        velocity = Vector3.zero;
 	}
     public void PlayerUp()
     {

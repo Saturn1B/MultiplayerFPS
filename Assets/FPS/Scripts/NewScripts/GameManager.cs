@@ -19,6 +19,8 @@ public class GameManager : NetworkBehaviour
     public UnityEvent gameManagerLoadedOnScene;
     public UnityEvent gameOver;
 
+    private bool firstConnect = true;
+
 	public override void OnNetworkSpawn()
 	{
         if (!IsHost) return;
@@ -53,8 +55,6 @@ public class GameManager : NetworkBehaviour
         }
 
         maxPlayers.Value = players;
-
-        ChangeScene("NewPve");
     }
 
     void ConnectedPlayersCallback(int previous, int current)
@@ -63,7 +63,31 @@ public class GameManager : NetworkBehaviour
 		{
             allPlayersLoaded.Invoke();
             canPlayerMove.Value = true;
-		}
+
+            if (firstConnect)
+            {
+                firstConnect = false;
+                switch (_currentGameMode.Value)
+                {
+                    case 0:
+                        ChangeScene("NewPve");
+                        break;
+                    case 1:
+                        ChangeScene("PhobosNetcodeScene");
+                        break;
+                    case 2:
+                        ChangeScene("PhobosNetcodeScene");
+                        break;
+                    case 3:
+                        ChangeScene("PhobosNetcodeScene");
+                        break;
+                    default:
+                        ChangeScene("NewPve");
+                        break;
+                }
+            }
+
+        }
         else
         {
             canPlayerMove.Value = false;
