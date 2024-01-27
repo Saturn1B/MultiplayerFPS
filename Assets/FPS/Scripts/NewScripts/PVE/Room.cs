@@ -79,7 +79,7 @@ public class Room : NetworkBehaviour
 		Debug.Log("Open Door");
 		isDoorOpened = true;
 		door.OpenDoor();
-		nextRoom.StartRoomEnemy();
+		nextRoom.StartRoomEnemyServerRpc();
 	}
 
 	private void ActivatePortal()
@@ -102,12 +102,14 @@ public class Room : NetworkBehaviour
 	//	}
 	//}
 
-	public void StartRoomEnemy()
+	[ServerRpc]
+	public void StartRoomEnemyServerRpc()
     {
 		if(roomEnemys.Count > 0)
         {
-            foreach (var enemy in roomEnemys)
+            foreach (GameObject enemy in roomEnemys)
             {
+				enemy.GetComponent<EnnemiAi>().active = true;
 				//start enemy
 			}
 		}
