@@ -42,9 +42,17 @@ public class EnnemiAi : NetworkBehaviour
 
         if (other.transform.GetComponent<PlayerNetworkHandler>() && active)
         {
-            targets = other.transform;
+            if (other.transform.GetComponent<PlayerNetworkHandler>().isDown.Value)
+            {
+                //Je fous quoi mdr ^^ player dead
+            }
+            else
+            {
+                targets = other.transform;
+            }
+            
 
-            if (shooter && other.transform.GetComponent<PlayerNetworkHandler>())
+            if (shooter && other.transform.GetComponent<PlayerNetworkHandler>() && other.transform.GetComponent<PlayerNetworkHandler>().isDown.Value == false)
             {
                 // Obtient la position actuelle de l'objet
                 Vector3 raycastOrigin = transformShoot.position;
@@ -81,7 +89,7 @@ public class EnnemiAi : NetworkBehaviour
                 // Dessine une ligne représentant le raycast dans l'éditeur pour le débogage
                 Debug.DrawRay(raycastOrigin, raycastDirection * raycastDistance, Color.green);
             }
-            else if (!shooter && other.transform.GetComponent<PlayerNetworkHandler>())
+            else if (!shooter && other.transform.GetComponent<PlayerNetworkHandler>() && other.transform.GetComponent<PlayerNetworkHandler>().isDown.Value == false)
             {
                 ChasePlayer();
             }
