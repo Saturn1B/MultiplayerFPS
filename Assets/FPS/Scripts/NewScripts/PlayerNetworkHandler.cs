@@ -91,17 +91,45 @@ public class PlayerNetworkHandler : NetworkBehaviour
 		{
 			case 0:
 				gameObject.tag = "Ally";
+				if (GetComponentInChildren<DeathMatchScoreDisplay>())
+					GetComponentInChildren<DeathMatchScoreDisplay>().scoreHolder.SetActive(false);
+				if (GetComponentInChildren<MMEScoreDisplay>())
+					GetComponentInChildren<MMEScoreDisplay>().scoreHolder.SetActive(false);
 				break;
 			case 1:
 				gameObject.tag = playerTeam.Value == 0 ? "TeamA" : "TeamB";
+				if (GetComponentInChildren<DeathMatchScoreDisplay>())
+					GetComponentInChildren<DeathMatchScoreDisplay>().scoreHolder.SetActive(false);
+				if (GetComponentInChildren<MMEScoreDisplay>())
+				{
+					MMEScoreDisplay mmeScoreDisplay = GetComponentInChildren<MMEScoreDisplay>();
+					mmeScoreDisplay.scoreHolder.SetActive(IsLocalPlayer);
+					mmeScoreDisplay.Setup();
+				}
 				break;
 			case 2:
+				if(GetComponentInChildren<DeathMatchScoreDisplay>())
+					GetComponentInChildren<DeathMatchScoreDisplay>().scoreHolder.SetActive(IsLocalPlayer);
+				if (GetComponentInChildren<MMEScoreDisplay>())
+					GetComponentInChildren<MMEScoreDisplay>().scoreHolder.SetActive(false);
 				break;
 			case 3:
 				gameObject.tag = playerTeam.Value == 0 ? "TeamA" : "TeamB";
+				if (GetComponentInChildren<DeathMatchScoreDisplay>())
+					GetComponentInChildren<DeathMatchScoreDisplay>().scoreHolder.SetActive(false);
+				if (GetComponentInChildren<MMEScoreDisplay>())
+                {
+					MMEScoreDisplay mmeScoreDisplay = GetComponentInChildren<MMEScoreDisplay>();
+					mmeScoreDisplay.scoreHolder.SetActive(IsLocalPlayer);
+					mmeScoreDisplay.Setup();
+				}
 				break;
 			default:
 				gameObject.tag = "Ally";
+				if (GetComponentInChildren<DeathMatchScoreDisplay>())
+					GetComponentInChildren<DeathMatchScoreDisplay>().scoreHolder.SetActive(false);
+				if (GetComponentInChildren<MMEScoreDisplay>())
+					GetComponentInChildren<MMEScoreDisplay>().scoreHolder.SetActive(false);
 				break;
 		}
 

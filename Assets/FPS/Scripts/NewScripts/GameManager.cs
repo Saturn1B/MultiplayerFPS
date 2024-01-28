@@ -14,6 +14,8 @@ public class GameManager : NetworkBehaviour
     public NetworkVariable<bool> canPlayerMove = new NetworkVariable<bool>(false, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Server);
     public NetworkVariable<int> playersDown = new NetworkVariable<int>(0, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Server);
 
+    public NetworkVariable<int> scoreTeamA = new NetworkVariable<int>(0, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Server);
+    public NetworkVariable<int> scoreTeamB = new NetworkVariable<int>(0, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Server);
 
     public UnityEvent allPlayersLoaded;
     public UnityEvent gameManagerLoadedOnScene;
@@ -125,6 +127,15 @@ public class GameManager : NetworkBehaviour
             default:
                 break;
         }
+    }
+
+    [ServerRpc(RequireOwnership = false)]
+    public void TeamScoreServerRpc(int team)
+    {
+        if (team == 0)
+            scoreTeamA.Value++;
+        else
+            scoreTeamB.Value++;
     }
 }
 

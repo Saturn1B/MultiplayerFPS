@@ -97,7 +97,17 @@ public class HealthComponent : NetworkBehaviour
                 GetComponent<PlayerNetworkHandler>().ChooseSpawn();
                 StartCoroutine(DeathmatchRespawn());
             }
-			else
+            else if(gameManager._currentGameMode.Value == 3)
+            {
+                if(gameObject.CompareTag("TeamA"))
+                    gameManager.TeamScoreServerRpc(1);
+                else if (gameObject.CompareTag("TeamB"))
+                    gameManager.TeamScoreServerRpc(0);
+
+                GetComponent<PlayerNetworkHandler>().ChooseSpawn();
+                StartCoroutine(DeathmatchRespawn());
+            }
+            else
 			{
                 GetComponent<PlayerNetworkHandler>().ChooseSpawn();
                 StartCoroutine(InvincibilityFrame());
