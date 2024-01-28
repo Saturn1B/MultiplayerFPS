@@ -81,6 +81,7 @@ public class PlayerNetworkHandler : NetworkBehaviour
 		});
 
 		gameManager.endTeam.AddListener(HandleEndTeamClientRpc);
+		gameManager.endDeath.AddListener(HandleEndDeathmatchClientRpc);
 
 		gameManager.gameManagerLoadedOnScene.AddListener(() =>
 		{
@@ -166,6 +167,19 @@ public class PlayerNetworkHandler : NetworkBehaviour
 		Cursor.visible = true;
 		controller.isGameOver = true;
 		if (playerTeam.Value == team)
+			endHandler.End(true);
+		else
+			endHandler.End(false);
+	}
+
+	[ClientRpc]
+	private void HandleEndDeathmatchClientRpc(int playerId)
+	{
+		if (!IsOwner) return;
+		Cursor.lockState = CursorLockMode.None;
+		Cursor.visible = true;
+		controller.isGameOver = true;
+		if (int.Parse(OwnerClientId.ToString()) == playerId)
 			endHandler.End(true);
 		else
 			endHandler.End(false);

@@ -11,8 +11,10 @@ public class DeathMatchScore : NetworkBehaviour
     {
         playerScore.OnValueChanged += ((int old, int current) =>
         {
-            if(current >= GameManager.deathMatchMaxScore)
-                Debug.Log("end game winning");
+            if(current >= GameManager.deathMatchMaxScore && IsOwner)
+			{
+                FindObjectOfType<GameManager>().EndDeathMatchServerRpc(int.Parse(OwnerClientId.ToString()));
+			}
         });
     }
 

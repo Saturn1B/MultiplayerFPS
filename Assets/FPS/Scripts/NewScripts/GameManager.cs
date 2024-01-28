@@ -8,6 +8,9 @@ using UnityEngine.Events;
 [System.Serializable]
 public class EndTeamEvent : UnityEvent<int> { }
 
+[System.Serializable]
+public class EndDeathMatchEvent : UnityEvent<int> { }
+
 public class GameManager : NetworkBehaviour
 {
     public NetworkVariable<int> _currentGameMode = new NetworkVariable<int>(0, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Server);
@@ -25,6 +28,13 @@ public class GameManager : NetworkBehaviour
     public UnityEvent gameOver;
 
     public EndTeamEvent endTeam;
+    public EndDeathMatchEvent endDeath;
+
+    [ServerRpc(RequireOwnership = false)]
+    public void EndDeathMatchServerRpc(int playerId)
+	{
+        endDeath.Invoke(playerId);
+	}
 
     private bool firstConnect = true;
 
