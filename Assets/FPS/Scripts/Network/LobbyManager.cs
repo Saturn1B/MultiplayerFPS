@@ -30,6 +30,13 @@ public class LobbyManager : NetworkBehaviour
     {
         await UnityServices.InitializeAsync();
 
+        if (AuthenticationService.Instance.IsSignedIn)
+        {
+            playerName = name;
+            ListLobbies();
+            return;
+        }
+
         AuthenticationService.Instance.SignedIn += () =>
         {
             Debug.Log("Signed in " + AuthenticationService.Instance.PlayerId);
@@ -180,7 +187,7 @@ public class LobbyManager : NetworkBehaviour
 	{
 		try
 		{
-            int maxPlayers = 10;
+            int maxPlayers = 4;
             CreateLobbyOptions createLobbyOptions = new CreateLobbyOptions
             {
                 IsPrivate = false,
