@@ -145,8 +145,6 @@ MonoBehaviour:
   explosionForce: 10
   explosionRadius: 5
   upwardsModifier: 3
-  health: {fileID: 0}
-  playerHealth: {fileID: 0}
 --- !u!1 &2921359046080136702
 GameObject:
   m_ObjectHideFlags: 0
@@ -298,6 +296,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   shooter: 0
+  active: 0
+  damage: 1
   raycastDistance: 10
   chaseSpeed: 5
   returnSpeed: 3
@@ -410,9 +410,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   isInvicible: 0
   invicibilityTime: 0
-  maxHealth: 20
+  maxHealth: 5
   currentHealth:
     m_InternalValue: 0
+  dontDestroy: 0
 --- !u!1 &8446035640890495943
 GameObject:
   m_ObjectHideFlags: 0

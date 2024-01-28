@@ -293,6 +293,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   shooter: 1
+  active: 0
+  damage: 1
   raycastDistance: 10
   chaseSpeed: 5
   returnSpeed: 3
@@ -407,9 +409,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   isInvicible: 0
   invicibilityTime: 0
-  maxHealth: 20
+  maxHealth: 30
   currentHealth:
     m_InternalValue: 0
+  dontDestroy: 0
 --- !u!1 &6397019331082099582
 GameObject:
   m_ObjectHideFlags: 0

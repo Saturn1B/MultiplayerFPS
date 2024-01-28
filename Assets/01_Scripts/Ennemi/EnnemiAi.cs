@@ -11,6 +11,7 @@ public class EnnemiAi : NetworkBehaviour
     public bool shooter;
     
     public bool active;
+    public float damage;
 
     public float raycastDistance = 10f;
     public float chaseSpeed = 5f;
@@ -142,7 +143,7 @@ public class EnnemiAi : NetworkBehaviour
         {
             Debug.Log("pew pew");
 
-            targets.GetComponent<HealthComponent>().TakeDamageClientRpc(1f);
+            targets.GetComponent<HealthComponent>().TakeDamageClientRpc(damage);
         }
         else
         {
