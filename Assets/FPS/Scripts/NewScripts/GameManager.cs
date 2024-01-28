@@ -5,6 +5,9 @@ using Unity.Netcode;
 using UnityEngine.SceneManagement;
 using UnityEngine.Events;
 
+[System.Serializable]
+public class EndTeamEvent : UnityEvent<int> { }
+
 public class GameManager : NetworkBehaviour
 {
     public NetworkVariable<int> _currentGameMode = new NetworkVariable<int>(0, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Server);
@@ -21,7 +24,13 @@ public class GameManager : NetworkBehaviour
     public UnityEvent gameManagerLoadedOnScene;
     public UnityEvent gameOver;
 
+    public EndTeamEvent endTeam;
+
     private bool firstConnect = true;
+
+    public static int deathMatchMaxScore = 40;
+    public static int mmeMaxScore = 25;
+    public static int controlMaxScore = 100;
 
 	public override void OnNetworkSpawn()
 	{
@@ -44,12 +53,38 @@ public class GameManager : NetworkBehaviour
                 break;
             case "control":
                 _currentGameMode.Value = 1;
+                scoreTeamA.OnValueChanged += (int old, int current) =>
+                {
+                    if (current >= controlMaxScore)
+					{
+                        FindObjectOfType<ControlObjective>().StopAllCoroutines();
+                        endTeam.Invoke(0);
+                    }
+                };
+                scoreTeamB.OnValueChanged += (int old, int current) =>
+                {
+                    if (current >= controlMaxScore)
+					{
+                        FindObjectOfType<ControlObjective>().StopAllCoroutines();
+                        endTeam.Invoke(1);
+                    }
+                };
                 break;
             case "deathmatch":
                 _currentGameMode.Value = 2;
                 break;
             case "mme":
                 _currentGameMode.Value = 3;
+                scoreTeamA.OnValueChanged += (int old, int current) =>
+                {
+                    if (current >= mmeMaxScore)
+                        endTeam.Invoke(0);
+                };
+                scoreTeamB.OnValueChanged += (int old, int current) =>
+                {
+                    if (current >= mmeMaxScore)
+                        endTeam.Invoke(1);
+                };
                 break;
             default:
                 _currentGameMode.Value = 0;

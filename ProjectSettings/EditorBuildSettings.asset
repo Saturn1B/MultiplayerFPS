@@ -35,4 +35,7 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/03_Scene/BossMap.unity
     guid: 4ec6dce35e5d8fe47b0db2d3e3c0fdb6
+  - enabled: 1
+    path: Assets/FPS/Scenes/ControlScene.unity
+    guid: bf8a4071b33a8664c95f133edb9774d7
   m_configObjects: {}

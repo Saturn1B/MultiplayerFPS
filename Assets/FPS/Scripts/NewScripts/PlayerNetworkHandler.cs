@@ -12,6 +12,7 @@ public class PlayerNetworkHandler : NetworkBehaviour
 	private ReanimationHandler reanimationHandler;
 	private HealthComponent healthComponent;
 	private GameOverHandler gameOverHandler;
+	private EndHandler endHandler;
 
 	[SerializeField] private GameObject downDetector;
 	[HideInInspector] public NetworkVariable<bool> isDown = new NetworkVariable<bool>(false, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner);
@@ -31,6 +32,7 @@ public class PlayerNetworkHandler : NetworkBehaviour
 		reanimationHandler = GetComponentInChildren<ReanimationHandler>();
 		healthComponent = GetComponent<HealthComponent>();
 		gameOverHandler = GetComponentInChildren<GameOverHandler>();
+		endHandler = GetComponentInChildren<EndHandler>();
 
 		Debug.Log("CONNECT PLAYER FIRST TIME");
 
@@ -77,6 +79,8 @@ public class PlayerNetworkHandler : NetworkBehaviour
 		{
 			HandleGameOverClientRpc();
 		});
+
+		gameManager.endTeam.AddListener(HandleEndTeamClientRpc);
 
 		gameManager.gameManagerLoadedOnScene.AddListener(() =>
 		{
@@ -152,6 +156,19 @@ public class PlayerNetworkHandler : NetworkBehaviour
 		Cursor.visible = true;
 		controller.isGameOver = true;
 		gameOverHandler.GameOver();
+	}
+
+	[ClientRpc]
+	private void HandleEndTeamClientRpc(int team)
+	{
+		if (!IsOwner) return;
+		Cursor.lockState = CursorLockMode.None;
+		Cursor.visible = true;
+		controller.isGameOver = true;
+		if (playerTeam.Value == team)
+			endHandler.End(true);
+		else
+			endHandler.End(false);
 	}
 
 	private void SceneManager_OnSceneEvent(SceneEvent sceneEvent)
@@ -318,12 +335,14 @@ public class PlayerNetworkHandler : NetworkBehaviour
 	[ClientRpc]
 	public void RemoveSpawnPointClientRpc()
     {
-		choosenSpawn = null;
+		if (IsOwner)
+			choosenSpawn = null;
     }
 	[ClientRpc]
 	public void RemoveObjectiveClientRpc()
 	{
-		isInObjective.Value = false;
+		if (IsOwner)
+			isInObjective.Value = false;
 	}
 	[ClientRpc]
 	public void AddObjectiveClientRpc()

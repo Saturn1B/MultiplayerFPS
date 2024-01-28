@@ -11,7 +11,8 @@ public class DeathMatchScore : NetworkBehaviour
     {
         playerScore.OnValueChanged += ((int old, int current) =>
         {
-            //check if score is best
+            if(current >= GameManager.deathMatchMaxScore)
+                Debug.Log("end game winning");
         });
     }
 
