@@ -18,6 +18,9 @@ public class PlayerNetworkHandler : NetworkBehaviour
 
 	private NetworkVariable<int> playerTeam = new NetworkVariable<int>(0, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner);
 
+	SpawnPoint choosenSpawn;
+	public NetworkVariable<bool> isInObjective = new NetworkVariable<bool>(false, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner);
+
 	public override void OnNetworkSpawn()
 	{
 		StartCoroutine(WaitForGM());
@@ -169,25 +172,56 @@ public class PlayerNetworkHandler : NetworkBehaviour
 		if (!IsOwner) return;
 
 		SpawnPoint[] spawnpoints = FindObjectsOfType<SpawnPoint>();
-		SpawnPoint choosenSpawn = null;
+		List<SpawnPoint> choosenSpawnPoints = new List<SpawnPoint>();
+		if (choosenSpawn != null)
+        {
+			choosenSpawn.istaken.Value--;
+			choosenSpawn = null;
+		}
 		foreach (SpawnPoint spawn in spawnpoints)
 		{
-			if (!spawn.istaken.Value)
+			if (spawn.istaken.Value == 0)
 			{
 				if(gameManager._currentGameMode.Value != 2)
                 {
                     if (spawn.gameObject.CompareTag(gameObject.tag))
                     {
-						choosenSpawn = spawn;
+						choosenSpawnPoints.Add(spawn);
 					}
 				}
 				else
-					choosenSpawn = spawn;
+					choosenSpawnPoints.Add(spawn);
 			}
 		}
-		if (choosenSpawn != null)
+
+		if (choosenSpawnPoints.Count > 0)
 		{
-			controller.Teleport(choosenSpawn.transform.position);
+			choosenSpawn = choosenSpawnPoints[Random.Range(0, choosenSpawnPoints.Count)];
+		}
+        else
+        {
+			if (gameManager._currentGameMode.Value != 2)
+            {
+				foreach (SpawnPoint spawn in spawnpoints)
+				{
+					if (spawn.gameObject.CompareTag(gameObject.tag))
+					{
+						choosenSpawn = spawn;
+					}
+				}
+			}
+			else
+				choosenSpawn = spawnpoints[Random.Range(0, spawnpoints.Length)];
+        }
+		controller.Teleport(choosenSpawn.transform.position);
+
+		if (gameManager._currentGameMode.Value == 1 && isInObjective.Value)
+		{
+			if (gameObject.CompareTag("TeamA"))
+				FindObjectOfType<ControlObjective>().RemoveFromTeamServerRpc(0);
+			else if (gameObject.CompareTag("TeamB"))
+				FindObjectOfType<ControlObjective>().RemoveFromTeamServerRpc(1);
+			isInObjective.Value = false;
 		}
 	}
 
@@ -280,4 +314,22 @@ public class PlayerNetworkHandler : NetworkBehaviour
 			Destroy(NetworkManager.Singleton.gameObject);
 		}
 	}
+
+	[ClientRpc]
+	public void RemoveSpawnPointClientRpc()
+    {
+		choosenSpawn = null;
+    }
+	[ClientRpc]
+	public void RemoveObjectiveClientRpc()
+	{
+		isInObjective.Value = false;
+	}
+	[ClientRpc]
+	public void AddObjectiveClientRpc()
+	{
+		if(IsOwner)
+			isInObjective.Value = true;
+	}
 }
+

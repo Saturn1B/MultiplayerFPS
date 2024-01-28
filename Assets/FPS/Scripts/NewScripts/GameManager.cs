@@ -75,7 +75,7 @@ public class GameManager : NetworkBehaviour
                         ChangeScene("NewPve");
                         break;
                     case 1:
-                        ChangeScene("PhobosNetcodeScene");
+                        ChangeScene("ControlScene");
                         break;
                     case 2:
                         ChangeScene("PhobosNetcodeScene");

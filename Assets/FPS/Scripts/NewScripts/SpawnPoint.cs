@@ -12,24 +12,22 @@ public enum SpawnType
 
 public class SpawnPoint : NetworkBehaviour
 {
-    public NetworkVariable<bool> istaken = new NetworkVariable<bool>(false, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Server);
+    public NetworkVariable<int> istaken = new NetworkVariable<int>(0, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Server);
 	public SpawnType spawnType;
 
 	private void OnTriggerEnter(Collider other)
 	{
 		if(IsServer && other.transform.GetComponent<PlayerNetworkHandler>())
-			istaken.Value = true;
-	}
-
-	private void OnTriggerStay(Collider other)
-	{
-		if (IsServer && other.transform.GetComponent<PlayerNetworkHandler>())
-			istaken.Value = true;
+			istaken.Value++;
 	}
 
 	private void OnTriggerExit(Collider other)
 	{
 		if (IsServer && other.transform.GetComponent<PlayerNetworkHandler>())
-			istaken.Value = false;
+        {
+			Debug.Log("exit spawnpoint");
+			istaken.Value--;
+			other.transform.GetComponent<PlayerNetworkHandler>().RemoveSpawnPointClientRpc();
+		}
 	}
 }

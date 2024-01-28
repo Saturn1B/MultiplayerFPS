@@ -84,6 +84,11 @@ public class HealthComponent : NetworkBehaviour
 			{
                 GetComponent<PlayerNetworkHandler>().PlayerDown();
 			}
+            else if (gameManager._currentGameMode.Value == 1)
+            {
+                GetComponent<PlayerNetworkHandler>().ChooseSpawn();
+                StartCoroutine(DeathmatchRespawn());
+            }
             else if (gameManager._currentGameMode.Value == 2)
             {
                 PlayerNetworkHandler[] players = FindObjectsOfType<PlayerNetworkHandler>();
